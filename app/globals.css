@@ -31,6 +31,15 @@
 * { box-sizing: border-box; }
 html { background: #000; color-scheme: dark; scroll-behavior: smooth; scroll-padding-top: 76px; }
 body { margin: 0; background: #000; color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.5; letter-spacing: 0; font-synthesis: none; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+body.has-launch-intro { overflow: hidden; }
+.launch-intro { position: fixed; z-index: 300; inset: 0; width: 100vw; height: 100vh; background: #000; transition: background-color 900ms ease; }
+.launch-intro--moving { background: transparent; }
+.launch-logo { position: absolute; top: 50%; left: 50%; width: min(62vw, 560px); line-height: 0; transform: translate(-50%, -50%); animation: launch-logo-reveal 1600ms cubic-bezier(.16, 1, .3, 1) both; transition: top 980ms cubic-bezier(.22, 1, .36, 1), left 980ms cubic-bezier(.22, 1, .36, 1), width 980ms cubic-bezier(.22, 1, .36, 1), transform 980ms cubic-bezier(.22, 1, .36, 1); }
+.launch-intro--moving .launch-logo { top: 22px; left: var(--gutter); width: clamp(132px, 13vw, 218px); transform: translate(0, 0); }
+.launch-logo img { display: block; width: 100%; height: auto; }
+@keyframes launch-logo-reveal { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+.brand-corner-logo { position: fixed; z-index: 150; top: 22px; left: var(--gutter); width: clamp(132px, 13vw, 218px); line-height: 0; }
+.brand-corner-logo img { display: block; width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; }
 button { font-family: "Waldenburg", sans-serif; }
