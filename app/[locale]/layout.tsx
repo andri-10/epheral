@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, siteConfig } from "@/content/site-config";
 import { getDictionary } from "@/i18n";
+import { RouteMenuTransition } from "@/components/route-menu-transition";
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
 
@@ -38,10 +39,13 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!isLocale(locale)) notFound();
   return (
     <html lang={locale} data-scroll-behavior="smooth">
-      <head><link rel="preload" href="/animations/canvas/living-canvas-0001.webp" as="image" type="image/webp" /></head>
+      <head>
+        <link rel="preload" href="/animations/canvas/living-canvas-0001.webp" as="image" type="image/webp" />
+      </head>
       <body suppressHydrationWarning>
         <a className="skip-link" href="#main-content">{locale === "sq" ? "Kalo te përmbajtja" : "Skip to content"}</a>
         {children}
+        <RouteMenuTransition locale={locale} />
       </body>
     </html>
   );

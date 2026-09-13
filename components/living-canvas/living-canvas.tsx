@@ -16,11 +16,15 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   const copyRefs = useRef<(HTMLElement | null)[]>([]);
   const [desktop, setDesktop] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigateFromMenu = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault();
+    window.dispatchEvent(new CustomEvent("menu-route-transition", { detail: href }));
+  };
 
   const menuPanel = (
     <div className={`hero-menu-panel ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
       <nav aria-label="Main menu">
-        {["Services", "Works", "Contact", "Pricing"].map((item) => <a key={item} href={item === "Services" ? `/${locale}/services` : "#"} tabIndex={menuOpen ? 0 : -1} onClick={item === "Services" ? undefined : (event) => event.preventDefault()}>{item}</a>)}
+        {["Services", "Works", "Contact", "Pricing"].map((item) => <a key={item} href={item === "Services" ? `/${locale}/services` : "#"} tabIndex={menuOpen ? 0 : -1} onClick={item === "Services" ? (event) => navigateFromMenu(event, `/${locale}/services`) : (event) => event.preventDefault()}>{item}</a>)}
       </nav>
     </div>
   );
