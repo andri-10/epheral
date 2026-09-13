@@ -20,7 +20,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   const menuPanel = (
     <div className={`hero-menu-panel ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
       <nav aria-label="Main menu">
-        {["Services", "Works", "Contact", "Pricing"].map((item) => <a key={item} href="#" tabIndex={menuOpen ? 0 : -1} onClick={(event) => event.preventDefault()}>{item}</a>)}
+        {["Services", "Works", "Contact", "Pricing"].map((item) => <a key={item} href={item === "Services" ? `/${locale}/services` : "#"} tabIndex={menuOpen ? 0 : -1} onClick={item === "Services" ? undefined : (event) => event.preventDefault()}>{item}</a>)}
       </nav>
     </div>
   );
@@ -72,7 +72,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       const y = (canvas.height - height) / 2;
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(image, x, y, width, height);
-      if (frame === 1 && !introPlayed) {
+      if (frame === 1 && !introPlayed && document.body.classList.contains("launch-complete")) {
         introPlayed = true;
         canvas.classList.add("is-intro");
         canvas.addEventListener("animationend", () => canvas.classList.remove("is-intro"), { once: true });
@@ -100,6 +100,14 @@ export function LivingCanvas({ locale, dictionary }: Props) {
     }
 
     const requestRender = () => { if (!animationFrame) animationFrame = requestAnimationFrame(render); };
+    const onLaunchComplete = () => {
+      const firstFrame = images.get(1);
+      if (firstFrame?.complete && firstFrame.naturalWidth && drawnFrame === 1) {
+        draw(firstFrame, 1);
+        drawnFrame = 1;
+      }
+      requestRender();
+    };
     const load = (frame: number) => {
       if (images.has(frame) || cancelled) return;
       const image = new window.Image();
@@ -131,7 +139,8 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       section.style.setProperty("--terminal-scale", (1 - terminalProgress * 0.58).toFixed(4));
       desiredFrame = Math.min(animationConfig.frameCount, Math.max(1, Math.round(1 + frameProgress * (animationConfig.frameCount - 1))));
       let nextStage = 0;
-      animationConfig.stageFrames.forEach((anchor, index) => { if (desiredFrame >= anchor) nextStage = index; });
+      animationConfig.stageFrames.slice(0, -1).forEach((anchor, index) => { if (desiredFrame >= anchor) nextStage = index; });
+      if (progress >= 0.82) nextStage = animationConfig.stageFrames.length - 1;
       canvas.classList.toggle("is-final-stage", nextStage === animationConfig.stageFrames.length - 1);
       section.classList.toggle("is-terminal", progress >= 0.82);
       section.classList.toggle("is-terminal-complete", progress >= 0.99);
@@ -164,6 +173,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
     resize(); onScroll();
     window.addEventListener("resize", resize);
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("launch-complete", onLaunchComplete);
     section.addEventListener("pointermove", onPointerMove, { passive: true });
     section.addEventListener("pointerleave", onPointerLeave);
     return () => {
@@ -172,6 +182,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       idleIds.forEach((id) => window.cancelIdleCallback?.(id));
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("launch-complete", onLaunchComplete);
       section.removeEventListener("pointermove", onPointerMove);
       section.removeEventListener("pointerleave", onPointerLeave);
       images.forEach((image) => { image.onload = null; image.src = ""; });
@@ -182,9 +193,9 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   const stageContent = (index: number) => (
     <>
       {index === 0 ? (
-        <><h1>{dictionary.hero.title.split(" ").map((word, wordIndex) => <span className="hero-word" key={`${word}-${wordIndex}`} style={{ animationDelay: `${wordIndex * 150}ms` }}>{word}</span>)}</h1></>
+        <><h1>{dictionary.hero.title.split("\n").map((line, lineIndex) => <span className="hero-line" key={line}>{line.split(" ").map((word, wordIndex) => <span className="hero-word" key={`${word}-${wordIndex}`} style={{ animationDelay: `${(lineIndex * 4 + wordIndex) * 150}ms` }}>{word}</span>)}</span>)}</h1></>
       ) : (
-        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === 5 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</>
+        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === dictionary.hero.stages.length - 1 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</>
       )}
     </>
   );
@@ -199,7 +210,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
           <canvas ref={canvasRef} className="story-canvas" aria-hidden="true" />
           <div className="hero-lightning" aria-hidden="true"><i className="lightning-bolt lightning-bolt--one" /><i className="lightning-bolt lightning-bolt--two" /><i className="lightning-bolt lightning-bolt--three" /><i className="lightning-bolt lightning-bolt--four" /><i className="lightning-bolt lightning-bolt--left-one" /><i className="lightning-bolt lightning-bolt--left-two" /><i className="lightning-bolt lightning-bolt--left-three" /><i className="lightning-bolt lightning-bolt--left-four" /><i className="lightning-glow" /></div>
           <div className="story-copies">
-            {dictionary.hero.stages.map((stage, index) => <article key={stage.label} ref={(node) => { copyRefs.current[index] = node; }} className={`story-copy ${index === 0 ? "is-active" : ""} ${index === 5 ? "is-final" : ""}`}>{stageContent(index)}</article>)}
+            {dictionary.hero.stages.map((stage, index) => <article key={stage.label} ref={(node) => { copyRefs.current[index] = node; }} className={`story-copy ${index === 0 ? "is-active" : ""} ${index === dictionary.hero.stages.length - 1 ? "is-final" : ""}`}>{stageContent(index)}</article>)}
           </div>
         </div>
       ) : (
@@ -211,7 +222,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
           <div className="mobile-hero-copy">{stageContent(0)}</div>
           <div className="story-poster" aria-hidden="true"><Image src={getFrameSrc(animationConfig.posterFrame)} alt="" fill priority sizes="(max-width: 1439px) 100vw, 1400px" /></div>
           <div className="mobile-stages">
-            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === 4 ? "is-final" : ""}><h2>{stage.line}</h2>{index === 4 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</article>)}
+            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === dictionary.hero.stages.length - 2 ? "is-final" : ""}><h2>{stage.line}</h2>{index === dictionary.hero.stages.length - 2 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</article>)}
           </div>
         </div>
       )}

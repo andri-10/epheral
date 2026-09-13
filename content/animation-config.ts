@@ -1,5 +1,5 @@
 export const animationConfig = {
-  frameCount: 167,
+  frameCount: 165,
   initialBatchSize: 12,
   batchSize: 12,
   directory: "/animations/canvas",
@@ -8,7 +8,7 @@ export const animationConfig = {
   desktopMinWidth: 900,
   maxDevicePixelRatio: 1.75,
   posterFrame: 132,
-  stageFrames: [1, 36, 60, 96, 132, 167],
+  stageFrames: [1, 45, 95, 165],
 } as const;
 
 export const getFrameSrc = (frame: number) =>

@@ -9,7 +9,11 @@ export function LaunchIntro() {
   const beginMove = () => {
     if (phase !== "revealing") return;
     setPhase("moving");
-    window.setTimeout(() => setPhase("done"), 980);
+    window.setTimeout(() => {
+      document.body.classList.add("launch-complete");
+      window.dispatchEvent(new Event("launch-complete"));
+      setPhase("done");
+    }, 1080);
   };
 
   useEffect(() => {

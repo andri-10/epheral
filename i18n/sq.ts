@@ -6,18 +6,17 @@ export const sq: Dictionary = {
   common: { primaryCta: "Flasim për projektin", secondaryCta: "Shiko projektet", learnMore: "Shiko projektin", nextProject: "Projekti tjetër", backHome: "Kthehu në faqen kryesore", replaceAsset: "Pamje orientuese — zëvendësohet me projektin real" },
   hero: {
     eyebrow: "Studio e pavarur dizajni dhe zhvillimi",
-    title: "Biznesi juaj lë përshtypje. Edhe faqja e tij duhet ta bëjë.",
+    title: "Biznesi juaj ka karakter.\nFaqja duhet ta përcjellë.",
     support: "Strategji, dizajn dhe zhvillim për biznese me një ofertë të mirë dhe ambicie për ta paraqitur siç duhet.",
     stages: [
-      { label: "Potencial", line: "Ka diçka të mirë këtu." }, { label: "Qartësi", line: "Fillimisht, qartësojmë çfarë ka rëndësi." },
-      { label: "Drejtim", line: "Qartësia merr formë." }, { label: "Ndërtim", line: "Ndërveprimi i jep jetë." },
-      { label: "Përsosje", line: "Çdo detaj mban peshën e vet." }, { label: "Rezultat", line: "Tani, ndihet si biznesi juaj." },
+      { label: "Potenciali", line: "" }, { label: "Drejtimi", line: "Nga ideja, te drejtimi." },
+      { label: "Detaji", line: "Çdo detaj ka peshë." }, { label: "Rezultati", line: "Bëjeni tuajin." },
     ],
     scroll: "Lëviz për të parë procesin",
   },
   work: { eyebrow: "Projekte të përzgjedhura", title: "Çdo drejtim nis nga vetë biznesi.", intro: "Tre studime orientuese tregojnë si përshtatet qasja me sektorë dhe nevoja të ndryshme. Përmbajtja dhe pamjet reale shtohen më pas.", viewProject: "Hap studimin" },
   services: {
-    eyebrow: "Shërbimet", title: "Qartësi në fillim. Cilësi deri në fund.",
+    eyebrow: "Shërbimet", title: "Gjithçka për biznesin tuaj\nnë një vend.",
     items: [
       { title: "Strategji dhe strukturë", copy: "Qartësojmë ofertën, audiencën dhe rrugën që duhet të ndjekë vizitori. Pastaj i japim përmbajtjes rendin e duhur.", includes: ["Hierarki përmbajtjeje", "UX dhe arkitekturë faqesh"] },
       { title: "Dizajn dhe ndërveprim", copy: "Një gjuhë vizuale me karakter, e kthyer në ndërfaqe që ndihet e qartë dhe e natyrshme në çdo ekran.", includes: ["Drejtim vizual", "Lëvizje dhe integrim 3D"] },

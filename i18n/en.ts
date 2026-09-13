@@ -6,18 +6,17 @@ export const en: Dictionary = {
   common: { primaryCta: "Start a conversation", secondaryCta: "View selected work", learnMore: "View project", nextProject: "Next project", backHome: "Back to home", replaceAsset: "Project visual — replace with final asset" },
   hero: {
     eyebrow: "Independent design and development studio",
-    title: "Make your business feel as good online as it does in real life.",
+    title: "Your business has character. The website should reflect it.",
     support: "Distinctive websites for businesses with something real to offer.",
     stages: [
-      { label: "Potential", line: "An idea with potential." }, { label: "Define", line: "Every strong presence starts with clarity." },
-      { label: "Design", line: "Structure becomes a point of view." }, { label: "Build", line: "Designed to be felt, not just viewed." },
-      { label: "Refine", line: "Built for every screen." }, { label: "Resolution", line: "Have something worth making tangible?" },
+      { label: "Potential", line: "" }, { label: "Shape", line: "Shape the direction." },
+      { label: "Detail", line: "Make every detail count." }, { label: "Resolve", line: "Don't make it pretty, make it yours." },
     ],
     scroll: "Scroll to follow the process",
   },
   work: { eyebrow: "Selected work", title: "A direction shaped around the business.", intro: "Three directional studies show how the approach adapts to different sectors and needs. Final imagery and real project content can replace them later.", viewProject: "View case study" },
   services: {
-    eyebrow: "Services", title: "Clarity at the start. Quality through the finish.",
+    eyebrow: "Services", title: "Everything your business needs in one place.",
     items: [
       { title: "Strategy and structure", copy: "We clarify what the website needs to say, who it serves and how it should guide people towards the right action.", includes: ["Content hierarchy", "UX and page architecture"] },
       { title: "Visual design and interaction", copy: "We develop a distinctive visual direction and a responsive interface that feels natural to use.", includes: ["Visual direction", "Motion and 3D integration"] },
