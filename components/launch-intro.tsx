@@ -6,11 +6,18 @@ import { useEffect, useState } from "react";
 export function LaunchIntro() {
   const [phase, setPhase] = useState<"revealing" | "moving" | "done">("revealing");
 
+  useEffect(() => {
+    if (window.sessionStorage.getItem("epheral-reset-scroll") !== "true") return;
+    window.sessionStorage.removeItem("epheral-reset-scroll");
+    window.scrollTo(0, 0);
+  }, []);
+
   const beginMove = () => {
     if (phase !== "revealing") return;
     setPhase("moving");
     window.setTimeout(() => {
       document.body.classList.add("launch-complete");
+      document.body.classList.remove("has-launch-intro");
       window.dispatchEvent(new Event("launch-complete"));
       setPhase("done");
     }, 1080);
