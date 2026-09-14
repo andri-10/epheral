@@ -21,6 +21,7 @@ export const en: Dictionary = {
       { title: "Strategy and structure", copy: "We clarify what the website needs to say, who it serves and how it should guide people towards the right action.", includes: ["Content hierarchy", "UX and page architecture"] },
       { title: "Visual design and interaction", copy: "We develop a distinctive visual direction and a responsive interface that feels natural to use.", includes: ["Visual direction", "Motion and 3D integration"] },
       { title: "Development and performance", copy: "We turn the system into resilient, fast and accessible code, ready to launch and straightforward to maintain.", includes: ["Frontend development", "Optimization and launch support"] },
+      { title: "Search and discovery", copy: "We make the right offering easier to find, with clear paths for people and a structure search engines can understand.", includes: ["Search foundations", "Local and technical visibility"] },
     ],
   },
   principles: {
@@ -51,5 +52,5 @@ export const en: Dictionary = {
   },
   footer: { line: "Distinctive websites, built with care.", navigation: "Navigation", social: "Social", availability: "Available for selected projects" },
   project: { context: "Context", objective: "Objective", direction: "Direction", deliverables: "Deliverables", placeholder: "This is a structured case-study placeholder. Replace it with imagery and content from the real project.", contactLine: "Have a project with the same need for clarity?" },
-  metadata: { title: "Living Canvas — Distinctive websites for real businesses", description: "Strategy, design and development for businesses with something real to offer." },
+  metadata: { title: "Epheral — Distinctive websites for real businesses", description: "Strategy, design and development for businesses with something real to offer." },
 };

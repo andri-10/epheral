@@ -15,32 +15,26 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const copyRefs = useRef<(HTMLElement | null)[]>([]);
   const [desktop, setDesktop] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navigateFromMenu = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    event.preventDefault();
-    window.dispatchEvent(new CustomEvent("menu-route-transition", { detail: href }));
-  };
-
-  const menuPanel = (
-    <div className={`hero-menu-panel ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
-      <nav aria-label="Main menu">
-        {["Services", "Works", "Contact", "Pricing"].map((item) => <a key={item} href={item === "Services" ? `/${locale}/services` : "#"} tabIndex={menuOpen ? 0 : -1} onClick={item === "Services" ? (event) => navigateFromMenu(event, `/${locale}/services`) : (event) => event.preventDefault()}>{item}</a>)}
-      </nav>
-    </div>
-  );
-
-  const menuButton = (
-    <button className={`hero-menu ${menuOpen ? "is-open" : ""}`} type="button" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
-      <span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" />
-    </button>
-  );
-
   useEffect(() => {
     const query = window.matchMedia(`(min-width: ${animationConfig.desktopMinWidth}px) and (prefers-reduced-motion: no-preference)`);
     const update = () => setDesktop(query.matches && typeof window.requestAnimationFrame === "function" && Boolean(document.createElement("canvas").getContext("2d")));
     update(); query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    if (desktop) return;
+    const finalStage = sectionRef.current?.querySelector<HTMLElement>(".mobile-stages article.is-final");
+    if (!finalStage) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      document.body.classList.toggle("hero-sequence-complete", entry.isIntersecting);
+    }, { threshold: 0.6 });
+    observer.observe(finalStage);
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove("hero-sequence-complete");
+    };
+  }, [desktop]);
 
   useEffect(() => {
     if (!desktop) return;
@@ -148,6 +142,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       canvas.classList.toggle("is-final-stage", nextStage === animationConfig.stageFrames.length - 1);
       section.classList.toggle("is-terminal", progress >= 0.82);
       section.classList.toggle("is-terminal-complete", progress >= 0.99);
+      document.body.classList.toggle("hero-sequence-complete", progress >= 0.99);
       if (nextStage !== activeStage) {
         activeStage = nextStage;
         copyRefs.current.forEach((node, index) => node?.classList.toggle("is-active", index === activeStage));
@@ -189,6 +184,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       window.removeEventListener("launch-complete", onLaunchComplete);
       section.removeEventListener("pointermove", onPointerMove);
       section.removeEventListener("pointerleave", onPointerLeave);
+      document.body.classList.remove("hero-sequence-complete");
       images.forEach((image) => { image.onload = null; image.src = ""; });
       images.clear();
     };
@@ -199,7 +195,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       {index === 0 ? (
         <><h1>{dictionary.hero.title.split("\n").map((line, lineIndex) => <span className="hero-line" key={line}>{line.split(" ").map((word, wordIndex) => <span className="hero-word" key={`${word}-${wordIndex}`} style={{ animationDelay: `${(lineIndex * 4 + wordIndex) * 150}ms` }}>{word}</span>)}</span>)}</h1></>
       ) : (
-        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === dictionary.hero.stages.length - 1 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</>
+        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === dictionary.hero.stages.length - 1 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</>
       )}
     </>
   );
@@ -208,8 +204,6 @@ export function LivingCanvas({ locale, dictionary }: Props) {
     <section className={`living-story ${desktop ? "is-desktop" : "is-flow"}`} ref={sectionRef} aria-label={dictionary.hero.eyebrow}>
       {desktop ? (
         <div className="story-sticky">
-          {menuButton}
-          {menuPanel}
           <div className="hero-orange-scene" aria-hidden="true"><div className="orange-grain" /></div>
           <canvas ref={canvasRef} className="story-canvas" aria-hidden="true" />
           <div className="hero-lightning" aria-hidden="true"><i className="lightning-bolt lightning-bolt--one" /><i className="lightning-bolt lightning-bolt--two" /><i className="lightning-bolt lightning-bolt--three" /><i className="lightning-bolt lightning-bolt--four" /><i className="lightning-bolt lightning-bolt--left-one" /><i className="lightning-bolt lightning-bolt--left-two" /><i className="lightning-bolt lightning-bolt--left-three" /><i className="lightning-bolt lightning-bolt--left-four" /><i className="lightning-glow" /></div>
@@ -219,14 +213,12 @@ export function LivingCanvas({ locale, dictionary }: Props) {
         </div>
       ) : (
         <div className="story-flow">
-          {menuButton}
-          {menuPanel}
           <div className="hero-orange-scene hero-orange-scene--flow" aria-hidden="true"><div className="orange-grain" /></div>
           <div className="hero-lightning hero-lightning--flow" aria-hidden="true"><i className="lightning-bolt lightning-bolt--one" /><i className="lightning-bolt lightning-bolt--three" /><i className="lightning-bolt lightning-bolt--four" /><i className="lightning-bolt lightning-bolt--left-one" /><i className="lightning-bolt lightning-bolt--left-three" /><i className="lightning-bolt lightning-bolt--left-four" /><i className="lightning-glow" /></div>
           <div className="mobile-hero-copy">{stageContent(0)}</div>
           <div className="story-poster" aria-hidden="true"><Image src={getFrameSrc(animationConfig.posterFrame)} alt="" fill priority sizes="(max-width: 1439px) 100vw, 1400px" /></div>
           <div className="mobile-stages">
-            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === dictionary.hero.stages.length - 2 ? "is-final" : ""}><h2>{stage.line}</h2>{index === dictionary.hero.stages.length - 2 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#contact`}>{dictionary.common.primaryCta}</Link></>}</article>)}
+            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === dictionary.hero.stages.length - 2 ? "is-final" : ""}><h2>{stage.line}</h2>{index === dictionary.hero.stages.length - 2 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</article>)}
           </div>
         </div>
       )}

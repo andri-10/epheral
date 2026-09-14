@@ -21,6 +21,7 @@ export const sq: Dictionary = {
       { title: "Strategji dhe strukturë", copy: "Qartësojmë ofertën, audiencën dhe rrugën që duhet të ndjekë vizitori. Pastaj i japim përmbajtjes rendin e duhur.", includes: ["Hierarki përmbajtjeje", "UX dhe arkitekturë faqesh"] },
       { title: "Dizajn dhe ndërveprim", copy: "Një gjuhë vizuale me karakter, e kthyer në ndërfaqe që ndihet e qartë dhe e natyrshme në çdo ekran.", includes: ["Drejtim vizual", "Lëvizje dhe integrim 3D"] },
       { title: "Zhvillim dhe performancë", copy: "Dizajni kthehet në kod të shpejtë, të aksesueshëm dhe të lehtë për t’u mirëmbajtur.", includes: ["Zhvillim frontend", "Optimizim dhe mbështetje në publikim"] },
+      { title: "Kërkimi dhe zbulimi", copy: "E bëjmë ofertën më të lehtë për t'u gjetur, me rrugë të qarta dhe një strukturë që kuptohet nga motorët e kërkimit.", includes: ["Bazat e kërkimit", "Dukshmëri lokale dhe teknike"] },
     ],
   },
   principles: {
@@ -51,5 +52,5 @@ export const sq: Dictionary = {
   },
   footer: { line: "Faqe me identitet, ndërtuar me kujdes.", navigation: "Navigimi", social: "Rrjetet", availability: "I disponueshëm për projekte të përzgjedhura" },
   project: { context: "Konteksti", objective: "Objektivi", direction: "Drejtimi", deliverables: "Çfarë përfshin", placeholder: "Ky është një studim strukturor. Zëvendësojeni me pamjet dhe përmbajtjen e projektit real.", contactLine: "Keni një projekt me të njëjtën nevojë për qartësi?" },
-  metadata: { title: "Living Canvas — Faqe interneti me identitet", description: "Dizajn dhe zhvillim faqesh interneti të dallueshme për biznese me diçka reale për të ofruar." },
+  metadata: { title: "Epheral — Faqe interneti me identitet", description: "Dizajn dhe zhvillim faqesh interneti të dallueshme për biznese me diçka reale për të ofruar." },
 };

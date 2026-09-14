@@ -22,6 +22,6 @@ export function LaunchIntro() {
     return () => document.body.classList.remove("has-launch-intro");
   }, [phase]);
 
-  if (phase === "done") return <div className="brand-corner-logo"><Image src="/brand/epheral_dark_background.png" alt="Epheral" width={1274} height={637} priority /></div>;
+  if (phase === "done") return null;
   return <div className={`launch-intro launch-intro--${phase}`}><div className="launch-logo" onAnimationEnd={beginMove}><Image src="/brand/epheral_dark_background.png" alt="" width={1274} height={637} priority /></div></div>;
 }

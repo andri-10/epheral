@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, siteConfig } from "@/content/site-config";
 import { getDictionary } from "@/i18n";
-import { RouteMenuTransition } from "@/components/route-menu-transition";
+import { GlobalNavbar } from "@/components/global-navbar";
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
 
@@ -44,8 +44,8 @@ export default async function LocaleLayout({ children, params }: Props) {
       </head>
       <body suppressHydrationWarning>
         <a className="skip-link" href="#main-content">{locale === "sq" ? "Kalo te përmbajtja" : "Skip to content"}</a>
+        <GlobalNavbar locale={locale} />
         {children}
-        <RouteMenuTransition locale={locale} />
       </body>
     </html>
   );

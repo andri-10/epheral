@@ -1,6 +1,6 @@
 export const siteConfig = {
-  id: "living_canvas",
-  name: "LIVING CANVAS",
+  id: "epheral",
+  name: "EPHERAL",
   owner: "[Your Name]",
   location: "[Location]",
   email: "[Email Address]",
