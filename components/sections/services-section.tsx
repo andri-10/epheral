@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 
+const visualTransitionDuration = 2200;
+
 export function ServicesSection({ dictionary, locale, embedded = false }: { dictionary: Dictionary; locale: string; embedded?: boolean }) {
   const categories = ["WEB EXPERIENCE", "DIGITAL MENUS", "REVIEWS & REPUTATION", "SEARCH & DISCOVERY"];
   const serviceTitles = ["Web Experience", "Digital Menus", "Reviews & Reputation", "Search & Discovery"];
@@ -20,7 +22,7 @@ export function ServicesSection({ dictionary, locale, embedded = false }: { dict
     if (previousCategory === selectedCategory) return;
     setPreviousVisualCategory(previousCategory);
     activeVisualCategory.current = selectedCategory;
-    const timeout = window.setTimeout(() => setPreviousVisualCategory(null), 1250);
+    const timeout = window.setTimeout(() => setPreviousVisualCategory(null), visualTransitionDuration);
     return () => window.clearTimeout(timeout);
   }, [selectedCategory]);
   useEffect(() => {
@@ -52,7 +54,7 @@ export function ServicesSection({ dictionary, locale, embedded = false }: { dict
     <div className="services-page__grid">
       <aside className="services-page__sidebar" data-reveal><nav>{categories.map((category, index) => <a className={index === selectedCategory ? "is-current" : ""} key={category} href={`#service-${index + 1}`} onClick={() => setSelectedCategory(index)}><span>0{index + 1}</span><span className="services-page__category-name">{category}</span></a>)}</nav></aside>
       <div className="services-page__content">{dictionary.services.items.map((item, index) => <article id={`service-${index + 1}`} data-service-index={index} ref={(element) => { articleRefs.current[index] = element; }} key={item.title} data-reveal><h3>{serviceTitles[index]}</h3><p>{item.copy}</p><ul>{item.includes.map((entry) => <li key={entry}>{entry}</li>)}</ul></article>)}</div>
-      <aside ref={visualRef} className="services-page__visual" data-reveal aria-label={`${serviceTitles[selectedCategory]} image`}><div className="services-page__visual-frame"><Image key={`background-${serviceImages[selectedCategory]}`} className="services-page__visual-background" src={`/services/${serviceImages[selectedCategory]}`} alt="" fill sizes="(min-width: 1200px) 50vw, 0px" aria-hidden="true" />{previousVisualCategory !== null && <Image key={`outgoing-${serviceImages[previousVisualCategory]}`} className="services-page__visual-image is-outgoing" src={`/services/${serviceImages[previousVisualCategory]}`} alt="" width={1200} height={1200} sizes="(min-width: 1200px) 50vw, 0px" aria-hidden="true" />}<Image key={`incoming-${serviceImages[selectedCategory]}`} className="services-page__visual-image is-incoming" src={`/services/${serviceImages[selectedCategory]}`} alt={serviceTitles[selectedCategory]} width={1200} height={1200} sizes="(min-width: 1200px) 50vw, 0px" /></div></aside>
+      <aside ref={visualRef} className="services-page__visual" data-reveal aria-label={`${serviceTitles[selectedCategory]} image`}><div className="services-page__visual-frame"><Image key={`background-${serviceImages[selectedCategory]}`} className="services-page__visual-background" src={`/services/${serviceImages[selectedCategory]}`} alt="" fill sizes="(min-width: 1200px) 60vw, 0px" aria-hidden="true" />{previousVisualCategory !== null && <Image key={`outgoing-${serviceImages[previousVisualCategory]}`} className="services-page__visual-image is-outgoing" src={`/services/${serviceImages[previousVisualCategory]}`} alt="" width={1200} height={1200} sizes="(min-width: 1200px) 60vw, 0px" aria-hidden="true" />}<Image key={`incoming-${serviceImages[selectedCategory]}`} className="services-page__visual-image is-incoming" src={`/services/${serviceImages[selectedCategory]}`} alt={serviceTitles[selectedCategory]} width={1200} height={1200} sizes="(min-width: 1200px) 60vw, 0px" /></div></aside>
     </div>
   </section>;
 }

@@ -241,32 +241,32 @@ body:not(.launch-complete) .hero-word { animation: none; color: inherit; }
 .services-page__sidebar a.is-current span:first-child { background: #fff; color: #000; }
 .services-page__sidebar a:hover span:first-child { background: var(--accent); color: #000; }
 .services-page__category-name { padding: 6px 10px; }
-.services-page__content { grid-column: 4 / span 4; display: flex; flex-direction: column; gap: clamp(192px, 18vw, 320px); padding-right: 48px; }
-.services-page__content article { display: grid; grid-template-columns: 44px 1fr; gap: 0 20px; max-width: 620px; min-height: 70vh; scroll-margin-top: 100px; }
+.services-page__content { grid-column: 4 / span 4; display: flex; flex-direction: column; gap: clamp(96px, 9vw, 160px); padding-right: 48px; }
+.services-page__content article { display: grid; grid-template-columns: 44px 1fr; gap: 0 20px; max-width: 620px; min-height: 58vh; scroll-margin-top: 100px; }
 .services-page__content article:last-child { min-height: calc(100vh - 4px); }
 .services-page__content h3 { grid-column: 1 / -1; margin: 0 0 18px; color: #fff; font-family: var(--font-sans); font-size: 36px; font-weight: 500; line-height: .98; letter-spacing: -.04em; }
 .services-page__content p { max-width: 520px; margin: 0 0 25px; color: rgb(255 255 255 / .78); font-size: 18px; line-height: 1.45; grid-column: 1 / -1; }
 .services-page__content ul { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 0; color: #fff; list-style: none; font-size: 14px; }
 .services-page__content li::before { content: "→"; margin-right: 10px; color: var(--accent); }
-.services-page__visual { grid-column: 9 / -1; position: sticky; top: var(--navbar-height); width: calc(100% + 32px); aspect-ratio: 1; margin-left: -32px; overflow: hidden; isolation: isolate; border: 1px solid var(--border); border-radius: 8px; background: #121212; }
+.services-page__visual { --visual-transition-duration: 2200ms; grid-column: 9 / -1; position: sticky; top: var(--navbar-height); width: 100%; aspect-ratio: 1; margin-left: 0; overflow: hidden; isolation: isolate; border: 1px solid var(--border); border-radius: 8px; background: #121212; }
 .services-page__visual-frame { position: relative; width: 100%; height: 100%; overflow: hidden; }
 .services-page__visual-background { position: absolute; z-index: -10; inset: -12.5%; width: 125%; height: 125%; max-width: none; object-fit: cover; transform: translateY(var(--services-parallax-y, 0px)) scale(1.25); transition: transform 160ms linear; opacity: .34; }
 .services-page__visual-image { position: absolute; z-index: 1; inset: 0; display: block; width: 100%; height: 100%; max-height: none; object-fit: contain; }
-.services-page__visual-image.is-incoming { animation: services-image-in 1250ms var(--ease) both; }
-.services-page__visual-image.is-outgoing { animation: services-image-out 1250ms var(--ease) both; }
+.services-page__visual-image.is-incoming { animation: services-image-in var(--visual-transition-duration) var(--ease) both; }
+.services-page__visual-image.is-outgoing { animation: services-image-out var(--visual-transition-duration) var(--ease) both; }
 @keyframes services-image-in { from { opacity: 0; transform: scale(1.025); } to { opacity: 1; transform: scale(1); } }
 @keyframes services-image-out { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(.985); } }
 @media (max-width: 1199px) {
   .services-page__heading { width: 83.333%; margin: 48px 0 56px; }
   .services-page__sidebar { grid-column: span 3; }
-  .services-page__content { grid-column: 4 / -1; gap: clamp(160px, 18vw, 280px); padding-right: 24px; }
+  .services-page__content { grid-column: 4 / -1; gap: clamp(80px, 8vw, 140px); padding-right: 24px; }
   .services-page__visual { display: none; }
 }
 @media (min-width: 1200px) {
   .services-page__heading { width: min(66.667%, 800px); margin: 40px 0 56px; }
   .services-page__sidebar { grid-column: span 2; height: calc(100vh - var(--navbar-height)); }
-  .services-page__content { grid-column: 3 / span 4; }
-  .services-page__visual { grid-column: 7 / -1; }
+  .services-page__content { grid-column: 3 / span 3; }
+  .services-page__visual { grid-column: 6 / -1; }
   .services-page__content article { align-content: start; padding-top: 16px; }
 }
 @media (max-width: 699px) {
