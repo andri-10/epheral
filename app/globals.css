@@ -240,7 +240,7 @@ body:not(.launch-complete) .hero-word { animation: none; color: inherit; }
 .services-page__heading { width: min(83.333%, 1080px); margin: 64px 0; padding: 0; text-align: left; }
 .services-page__heading h2 { margin: 18px 0 0; font-family: var(--font-sans); font-size: 4rem; font-weight: 500; font-style: normal; line-height: .98; letter-spacing: -.04em; text-wrap: balance; }
 .services-page__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 4px; align-items: start; }
-.services-page__sidebar { grid-column: span 3; position: sticky; top: var(--navbar-height); max-height: calc(100vh - var(--navbar-height)); overflow: auto; padding: 0 0 24px; border-right: 16px solid #000; background-image: linear-gradient(#000 0 132px, transparent 132px), var(--dots-pattern); background-size: 100% 100%, 8px 8px; background-clip: content-box; scrollbar-width: none; }
+.services-page__sidebar { grid-column: span 3; position: sticky; top: var(--navbar-height); max-height: calc(100vh - var(--navbar-height)); overflow: auto; padding: 0; border-right: 16px solid #000; background-image: linear-gradient(#000 0 132px, transparent 132px), var(--dots-pattern); background-size: 100% 100%, 8px 8px; background-clip: border-box; scrollbar-width: none; }
 .services-page__sidebar::after { display: none; }
 .services-page__sidebar::-webkit-scrollbar { display: none; }
 .services-page__sidebar nav { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0; }
