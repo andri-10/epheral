@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { animationConfig, getFrameSrc } from "@/content/animation-config";
@@ -28,6 +27,10 @@ function ServicesMarquee() {
       </div>
     </div>
   );
+}
+
+function FinalArrowField() {
+  return <span className="final-arrow-field" aria-hidden="true">{Array.from({ length: 3 }, (_, index) => <i className="final-arrow-field__arrow" key={index} />)}</span>;
 }
 
 export function LivingCanvas({ locale, dictionary }: Props) {
@@ -215,7 +218,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       {index === 0 ? (
         <><h1>{dictionary.hero.title.split("\n").map((line, lineIndex) => <span className="hero-line" key={line}>{line.split(" ").map((word, wordIndex) => <span className="hero-word" key={`${word}-${wordIndex}`} style={{ animationDelay: `${(lineIndex * 4 + wordIndex) * 150}ms` }}>{word}</span>)}</span>)}</h1></>
       ) : (
-        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === dictionary.hero.stages.length - 1 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</>
+        <><h2 data-text={dictionary.hero.stages[index].line}>{dictionary.hero.stages[index].line}</h2>{index === dictionary.hero.stages.length - 1 && <><FinalArrowField /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</>
       )}
     </>
   );
@@ -238,7 +241,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
           <div className="mobile-hero-copy">{stageContent(0)}</div>
           <div className="story-poster" aria-hidden="true"><Image src={getFrameSrc(animationConfig.posterFrame)} alt="" fill priority sizes="(max-width: 1439px) 100vw, 1400px" /></div>
           <div className="mobile-stages">
-            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === dictionary.hero.stages.length - 2 ? "is-final" : ""}><h2>{stage.line}</h2>{index === dictionary.hero.stages.length - 2 && <><ArrowDown className="final-stage-arrow" size={42} strokeWidth={1.6} aria-hidden="true" /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</article>)}
+            {dictionary.hero.stages.slice(1).map((stage, index) => <article data-reveal key={stage.label} className={index === dictionary.hero.stages.length - 2 ? "is-final" : ""}><h2>{stage.line}</h2>{index === dictionary.hero.stages.length - 2 && <><FinalArrowField /><Link className="button button--primary terminal-cta" href={`/${locale}#services`}>{dictionary.common.primaryCta}</Link></>}</article>)}
           </div>
         </div>
       )}

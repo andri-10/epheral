@@ -1,15 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 export function LaunchIntro() {
   const [phase, setPhase] = useState<"revealing" | "moving" | "done">("revealing");
 
-  useEffect(() => {
-    if (window.sessionStorage.getItem("epheral-reset-scroll") !== "true") return;
-    window.sessionStorage.removeItem("epheral-reset-scroll");
-    window.scrollTo(0, 0);
+  useLayoutEffect(() => {
+    window.history.scrollRestoration = "manual";
+    if (window.location.hash) window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
 
   const beginMove = () => {

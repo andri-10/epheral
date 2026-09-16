@@ -10,7 +10,6 @@ export function GlobalNavbar({ locale }: { locale: string }) {
   const returnHome = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setOpen(false);
-    window.sessionStorage.setItem("epheral-reset-scroll", "true");
     window.history.replaceState(null, "", homeHref);
     window.location.reload();
   };

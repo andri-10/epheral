@@ -11,6 +11,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) notFound();
   const dictionary = getDictionary(locale);
   return (
-    <><LaunchIntro /><main id="main-content"><LivingCanvas locale={locale} dictionary={dictionary} /><ServicesSection locale={locale} dictionary={dictionary} embedded /></main><RevealProvider /></>
+    <><LaunchIntro /><main id="main-content"><LivingCanvas locale={locale} dictionary={dictionary} /><ServicesSection locale={locale} dictionary={dictionary} embedded /><section className="services-reveal" aria-label="Next section"><div className="services-reveal__scene" aria-hidden="true"><div className="orange-grain" /></div></section></main><RevealProvider /></>
   );
 }
