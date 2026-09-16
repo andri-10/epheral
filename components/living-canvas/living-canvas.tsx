@@ -10,6 +10,26 @@ import type { Dictionary } from "@/i18n/types";
 
 type Props = { locale: Locale; dictionary: Dictionary };
 
+const marqueeItems = ["STRATEGY", "IDENTITY", "WEB DESIGN", "DEVELOPMENT", "MOTION", "CLARITY", "MOMENTUM", "IMPACT"];
+
+function ServicesMarquee() {
+  return (
+    <div className="services-marquee" aria-hidden="true">
+      <div className="services-marquee__track">
+        {[0, 1].map((set) => (
+          <div className="services-marquee__set" key={set}>
+            {[0, 1].flatMap((repeat) => marqueeItems.map((item) => ({ item, repeat }))).map(({ item, repeat }) => (
+              <span className="services-marquee__entry" key={`${set}-${repeat}-${item}`}>
+                <span>{item}</span><span className="services-marquee__separator">✦</span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function LivingCanvas({ locale, dictionary }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -222,6 +242,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
           </div>
         </div>
       )}
+      <ServicesMarquee />
     </section>
   );
 }

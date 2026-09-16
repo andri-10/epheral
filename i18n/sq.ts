@@ -16,7 +16,7 @@ export const sq: Dictionary = {
   },
   work: { eyebrow: "Projekte të përzgjedhura", title: "Çdo drejtim nis nga vetë biznesi.", intro: "Tre studime orientuese tregojnë si përshtatet qasja me sektorë dhe nevoja të ndryshme. Përmbajtja dhe pamjet reale shtohen më pas.", viewProject: "Hap studimin" },
   services: {
-    eyebrow: "Shërbimet", title: "Gjithçka për biznesin tuaj\nnë një vend.",
+    eyebrow: "Shërbimet", title: "Gjithçka për biznesin tuaj në një vend.",
     items: [
       { title: "Strategji dhe strukturë", copy: "Qartësojmë ofertën, audiencën dhe rrugën që duhet të ndjekë vizitori. Pastaj i japim përmbajtjes rendin e duhur.", includes: ["Hierarki përmbajtjeje", "UX dhe arkitekturë faqesh"] },
       { title: "Dizajn dhe ndërveprim", copy: "Një gjuhë vizuale me karakter, e kthyer në ndërfaqe që ndihet e qartë dhe e natyrshme në çdo ekran.", includes: ["Drejtim vizual", "Lëvizje dhe integrim 3D"] },
