@@ -66,6 +66,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .skip-link:focus { transform: translateY(0); }
 
 .global-navbar { position: fixed; z-index: 200; inset: 0 0 auto; height: var(--navbar-height); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--gutter); background: #000; }
+.global-navbar.is-reveal-mode { background: transparent; }
+.global-navbar.is-reveal-mode .global-navbar__menu { color: #fff; background: #000; border-radius: 12px; }
 body.has-launch-intro .global-navbar { visibility: hidden; pointer-events: none; }
 .global-navbar__home { position: relative; z-index: 12; display: block; flex: 0 0 auto; line-height: 0; }
 .global-navbar .brand-logo { z-index: 12; width: clamp(132px, 13vw, 218px); }
@@ -234,7 +236,7 @@ body:not(.launch-complete) .hero-word { animation: none; color: inherit; }
 .services-section { padding-top: var(--section-space); }
 .services-band .eyebrow, .services-band .item-number { color: var(--accent-dark); }
 .services-band .service-list p, .services-band .service-list ul { color: var(--muted-on-light); }
-.services-reveal { position: relative; z-index: 0; width: 100%; min-height: 100vh; margin-top: -40px; padding-top: 40px; overflow: hidden; background: #000; }
+.services-reveal { position: relative; z-index: 0; width: 100%; min-height: 120vh; margin-top: -40px; padding-top: 40px; overflow: hidden; background: #000; }
 .services-reveal__scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #6fa9e8 0%, #3e79b6 25%, #153253 58%, #000 100%); }
 .services-reveal__scene::before { content: ""; position: absolute; top: -20%; left: -18%; width: 72%; height: 70%; border-radius: 50%; background: radial-gradient(ellipse, rgb(194 224 255 / .34), rgb(111 169 232 / .14) 46%, transparent 74%); filter: blur(24px); animation: services-reveal-glow 12s ease-in-out infinite alternate; }
 .services-reveal__scene::after { content: ""; position: absolute; right: -18%; top: 8%; width: 62%; height: 58%; border-radius: 50%; background: radial-gradient(ellipse, rgb(111 169 232 / .24), transparent 72%); filter: blur(34px); animation: services-reveal-glow-secondary 15s ease-in-out infinite alternate; }
