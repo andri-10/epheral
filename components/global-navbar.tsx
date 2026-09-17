@@ -40,7 +40,7 @@ export function GlobalNavbar({ locale }: { locale: string }) {
   };
 
   return <header className={`global-navbar ${revealMode ? "is-reveal-mode" : ""}`}>
-    <a className="global-navbar__home" href={homeHref} aria-label="Return to the Epheral homepage" onClick={returnHome}><BrandLogo priority darkText={revealMode} /></a>
+    <a className="global-navbar__home" href={homeHref} aria-label="Return to the Epheral homepage" onClick={returnHome}><BrandLogo priority /></a>
     <button className={`hero-menu global-navbar__menu ${open ? "is-open" : ""}`} type="button" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((value) => !value)}><span /><span /><span /></button>
     <div className={`hero-menu-panel global-navbar__panel ${open ? "is-open" : ""}`} aria-hidden={!open}><nav aria-label="Main menu">{["Services", "Works", "Contact", "Pricing"].map((item) => <a className={item === "Services" ? "is-current" : ""} key={item} href={item === "Services" ? `/${locale}#services` : "#"} onClick={item === "Services" ? () => setOpen(false) : (event) => event.preventDefault()} tabIndex={open ? 0 : -1}>{item}</a>)}</nav></div>
   </header>;
