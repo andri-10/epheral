@@ -7,9 +7,9 @@ test("pricing stays after services when the desktop hero changes layout", async 
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.waitForFunction(() => document.querySelector<HTMLElement>(".pricing-section")!.offsetHeight > innerHeight);
   await expect(page.locator(".pricing-section h2")).toHaveText("Një ekip që i çon idetë përpara.");
-  await expect(page.locator(".service-item__tier")).toHaveText(["ESSENTIAL", "IMMERSIVE", "BUSINESS+", "BESPOKE"]);
-  await expect(page.locator(".service-item__price")).toHaveText(["Nga €290", "Nga €690", "Nga €1290", "Flasim për projektin →"]);
-  await expect(page.locator(".service-item__features li")).toHaveCount(34);
+  await expect(page.locator(".service-item__price")).toHaveText(["Nga €290", "Nga €690", "Nga €1290", "Flasim →"]);
+  await expect(page.locator(".service-item__features li")).toHaveCount(20);
+  await expect(page.locator(".service-item__tier, .service-item__tags, .service-item__price-note")).toHaveCount(0);
 
   const positions = await page.evaluate(() => {
     const hero = document.querySelector<HTMLElement>(".living-story")!;
@@ -42,6 +42,9 @@ test("pricing stays after services when the desktop hero changes layout", async 
       const widths = await page.locator(".service-item").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().width));
       expect(widths[0]).toBeGreaterThan(1200);
       expect(widths.slice(1).every((width) => width < 1)).toBe(true);
+      const contentWidth = await page.locator(".service-item__content").first().evaluate((node) => node.getBoundingClientRect().width);
+      const finalWidth = (await page.locator(".services-wrapper").evaluate((node) => node.clientWidth) - 72) / 4;
+      expect(contentWidth).toBeCloseTo(finalWidth, 0);
       await page.screenshot({ path: "test-results/pricing-transition.png" });
     }
   }
@@ -72,10 +75,43 @@ test("pricing stays after services when the desktop hero changes layout", async 
     }
     expect(visible[visible.length - 1].right).toBeCloseTo((await page.locator(".services-wrapper").boundingBox())!.x + (await page.locator(".services-wrapper").boundingBox())!.width, 0);
     if (visibleCount === 4) {
+      await expect(page.locator(".global-navbar")).toHaveClass(/is-reveal-mode/);
+      await page.locator(".global-navbar__home").hover();
+      await expect(page.locator(".global-navbar .brand-logo__reveal--blue")).toHaveCSS("visibility", "hidden");
+      await expect(page.locator(".global-navbar .brand-logo__reveal--black")).toHaveCSS("visibility", "visible");
+      await page.locator(".global-navbar__menu").hover();
+      await expect(page.locator(".global-navbar__menu")).toHaveCSS("color", "rgb(0, 0, 0)");
+      await page.locator(".global-navbar__menu").click();
+      await expect(page.locator(".global-navbar")).toHaveClass(/is-menu-open/);
+      await page.mouse.move(720, 450);
+      await expect(page.locator(".global-navbar__menu")).toHaveCSS("color", "rgb(255, 255, 255)");
+      await page.locator(".global-navbar__menu").hover();
+      await expect(page.locator(".global-navbar__menu")).toHaveCSS("color", "rgb(111, 169, 232)");
+      await page.locator(".global-navbar__home").hover();
+      await expect(page.locator(".global-navbar .brand-logo__reveal--blue")).toHaveCSS("visibility", "visible");
+      await expect(page.locator(".global-navbar .brand-logo__reveal--black")).toHaveCSS("visibility", "hidden");
+      await expect(page.locator(".global-navbar__panel a.is-current")).toHaveCSS("background-position", "100% 0px");
+      await page.locator(".global-navbar__panel a.is-current").hover();
+      await expect(page.locator(".global-navbar__panel a.is-current")).toHaveCSS("background-position", "0px 0px");
+      await page.locator(".global-navbar__menu").click();
+      await expect(page.locator(".global-navbar__panel")).toHaveAttribute("aria-hidden", "true");
+      await page.waitForTimeout(950);
       const headingTop = await page.locator(".pricing-section h2").evaluate((node) => node.getBoundingClientRect().top);
       expect(headingTop).toBeGreaterThan(90);
       const hiddenFeatures = await page.locator(".service-item__features").evaluateAll((nodes) => nodes.filter((node) => node.scrollHeight > node.clientHeight + 2).length);
       expect(hiddenFeatures).toBe(0);
+      const typography = await page.locator(".service-item").evaluateAll((nodes) => nodes.map((node) => {
+        const heading = node.querySelector<HTMLElement>("h3")!;
+        const content = node.querySelector<HTMLElement>(".service-item__content")!;
+        const cardRect = node.getBoundingClientRect();
+        const contentRect = content.getBoundingClientRect();
+        const features = Array.from(node.querySelectorAll<HTMLElement>(".service-item__features li"));
+        const style = getComputedStyle(heading);
+        return { fontSize: style.fontSize, headingLines: heading.getBoundingClientRect().height / Number.parseFloat(style.lineHeight), wrappedFeatures: features.filter((feature) => feature.scrollWidth > feature.clientWidth + 1).length, contentOffset: contentRect.left - cardRect.left, contentWidth: contentRect.width };
+      }));
+      expect(new Set(typography.map((item) => item.fontSize)).size).toBe(1);
+      expect(typography.every((item) => item.headingLines <= 3.1 && item.wrappedFeatures === 0 && Math.abs(item.contentOffset) < 1 && item.contentWidth > 300)).toBe(true);
+      await expect(page.locator(".service-item__price").first()).toHaveCSS("border-radius", "999px");
       await page.screenshot({ path: "test-results/pricing-four-cards.png" });
     }
   }
@@ -93,7 +129,6 @@ test("pricing cards remain readable and swipeable on narrow screens", async ({ p
   const heading = page.locator(".pricing-section h2");
   expect(await heading.evaluate((node) => node.scrollWidth - node.clientWidth)).toBeLessThanOrEqual(1);
   await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "right");
-  await expect(page.locator(".service-item__tags").first()).toHaveCSS("text-align", "center");
   await expect(page.locator(".service-item__features li").first()).toHaveCSS("border-bottom-width", "0px");
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.evaluate(() => {
@@ -113,11 +148,11 @@ test("English heading stays on one line at the narrowest viewport", async ({ pag
   expect(metrics.height).toBeLessThanOrEqual(metrics.lineHeight + 1);
 });
 
-test("English pricing uses the supplied tiers without a fixed Bespoke price", async ({ page }) => {
+test("English pricing uses compact card content without a fixed Bespoke price", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en");
   await expect(page.locator(".service-item__price")).toHaveText(["From €290", "From €690", "From €1290", "Let's talk →"]);
-  await expect(page.locator(".service-item:last-child .service-item__price-note")).toHaveText("Scoped individually for your project.");
+  await expect(page.locator(".service-item__tier, .service-item__tags, .service-item__price-note")).toHaveCount(0);
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";

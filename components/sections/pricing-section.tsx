@@ -25,14 +25,17 @@ export function PricingSection({ dictionary }: { dictionary: Dictionary }) {
       dispose = () => {};
       if (!desktopMotion.matches) return;
 
+      const gap = 24;
+      const trackWidth = () => wrapper.clientWidth;
+      const finalWidth = () => (trackWidth() - gap * (cards.length - 1)) / cards.length;
       const getDistance = () => viewport.clientHeight * (cards.length - 1);
-      const updateDistance = () => section.style.setProperty("--pricing-scroll-distance", `${getDistance()}px`);
-      updateDistance();
+      const updateGeometry = () => {
+        section.style.setProperty("--pricing-scroll-distance", `${getDistance()}px`);
+        wrapper.style.setProperty("--pricing-card-width", `${finalWidth()}px`);
+      };
+      updateGeometry();
 
       const context = gsap.context(() => {
-        const gap = 24;
-        const trackWidth = () => wrapper.clientWidth;
-        const finalWidth = () => (trackWidth() - gap * (cards.length - 1)) / cards.length;
         const timeline = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -69,7 +72,7 @@ export function PricingSection({ dictionary }: { dictionary: Dictionary }) {
       const refresh = () => {
         window.cancelAnimationFrame(refreshFrame);
         refreshFrame = window.requestAnimationFrame(() => {
-          updateDistance();
+          updateGeometry();
           ScrollTrigger.refresh();
         });
       };
@@ -103,16 +106,13 @@ export function PricingSection({ dictionary }: { dictionary: Dictionary }) {
         </div>
         <div className="services-wrapper" ref={wrapperRef}>
           {dictionary.pricing.items.map((card, index) => (
-            <article className={`service-item ${index === 0 ? "service-item--featured" : ""}`} key={card.tier}>
+            <article className={`service-item ${index === 0 ? "service-item--featured" : ""}`} key={card.headline}>
               <div className="service-item__content">
                 <div className="service-item__top">
-                  <span className="service-item__tier">{card.tier}</span>
                   <h3>{card.headline}</h3>
                   <p className="service-item__price">{card.price}</p>
-                  {card.priceNote && <p className="service-item__price-note">{card.priceNote}</p>}
                 </div>
                 <ul className="service-item__features">{card.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-                <p className="service-item__tags">{card.tags}</p>
               </div>
             </article>
           ))}
