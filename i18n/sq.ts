@@ -24,6 +24,40 @@ export const sq: Dictionary = {
       { title: "Kërkimi dhe zbulimi", copy: "E bëjmë ofertën më të lehtë për t'u gjetur, me rrugë të qarta dhe një strukturë që kuptohet nga motorët e kërkimit.", includes: ["Bazat e kërkimit", "Dukshmëri lokale dhe teknike"] },
     ],
   },
+  pricing: {
+    title: "Një ekip që i çon idetë përpara.",
+    items: [
+      {
+        tier: "ESSENTIAL",
+        headline: "Një faqe e qartë që i shkon biznesit tuaj.",
+        price: "Nga €290",
+        features: ["Faqe interneti me dizajn unik", "Deri në 5 faqe", "Zhvillim për çdo ekran", "Lëvizje dhe ndërveprime të lehta", "Formularë kontakti dhe rezervimi", "Bazat e SEO-s", "Konfigurim i analitikës"],
+        tags: "DIZAJN / ZHVILLIM / RESPONSIVE",
+      },
+      {
+        tier: "IMMERSIVE",
+        headline: "Kthejeni shfletimin në pjesë të historisë.",
+        price: "Nga €690",
+        features: ["Gjithçka nga Essential", "Përvoja që reagojnë ndaj shfletimit", "Animacione të avancuara", "Kalime mes faqeve", "Paralaks dhe seksione të fiksuara", "Mikro-ndërveprime të personalizuara", "Galeri ndërvepruese", "Integrim CMS"],
+        tags: "SHFLETIM / LËVIZJE / NDËRVEPRIM",
+      },
+      {
+        tier: "BUSINESS+",
+        headline: "Më shumë se një faqe. Një sistem digjital.",
+        price: "Nga €1290",
+        features: ["Gjithçka nga Immersive", "CMS i avancuar", "Konfigurim për kërkim dhe zbulim", "Google Analytics dhe konvertime", "Sistem vlerësimesh dhe reputacioni", "Integrime NFC dhe QR", "Menu digjitale, sipas nevojës", "Sisteme prenotimi dhe rezervimi", "Mbështetje shumëgjuhëshe", "Integrime me shërbime të tjera"],
+        tags: "WEB / ZBULIM / VLERËSIME",
+      },
+      {
+        tier: "BESPOKE",
+        headline: "Nëse mund ta imagjinoni, mund ta ndërtojmë.",
+        price: "Flasim për projektin →",
+        priceNote: "Përcaktohet sipas nevojave të projektit.",
+        features: ["Aplikacione web të personalizuara", "Përvoja komplekse ndërvepruese", "WebGL / 3D", "Sisteme të avancuara animacioni", "Panele kontrolli të personalizuara", "Integrime API", "Portale për klientët", "Arkitekturë CMS e personalizuar", "Automatizim i biznesit"],
+        tags: "EKSPERIMENTAL / APLIKACIONE / PERSONALIZIM",
+      },
+    ],
+  },
   principles: {
     eyebrow: "Parimet", title: "Një faqe e bukur nuk mjafton.", intro: "Duhet të jetë e qartë, e shpejtë dhe e dobishme — pa humbur karakterin.",
     items: [

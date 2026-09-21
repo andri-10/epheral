@@ -3,28 +3,9 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { Dictionary } from "@/i18n/types";
 
-const pricingCards = [
-  {
-    title: "A clear direction for your next chapter.",
-    className: "service-item--featured",
-    detail: "Strategy / positioning / creative direction",
-  },
-  {
-    title: "Make your identity impossible to ignore.",
-    detail: "Brand identity / visual systems / tone of voice",
-  },
-  {
-    title: "Digital experiences people remember.",
-    detail: "Web design / development / motion",
-  },
-  {
-    title: "Turn attention into real momentum.",
-    detail: "Content / campaigns / ongoing growth",
-  },
-];
-
-export function PricingSection() {
+export function PricingSection({ dictionary }: { dictionary: Dictionary }) {
   const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -118,14 +99,20 @@ export function PricingSection() {
       <div className="pricing-section__viewport" ref={viewportRef}>
         <div className="services-reveal__scene" aria-hidden="true"><div className="orange-grain" /></div>
         <div className="pricing-section__intro">
-          <h2 id="pricing-title">Work with a team that gets you moving.</h2>
+          <h2 id="pricing-title">{dictionary.pricing.title}</h2>
         </div>
         <div className="services-wrapper" ref={wrapperRef}>
-          {pricingCards.map((card) => (
-            <article className={`service-item ${card.className ?? ""}`} key={card.title}>
+          {dictionary.pricing.items.map((card, index) => (
+            <article className={`service-item ${index === 0 ? "service-item--featured" : ""}`} key={card.tier}>
               <div className="service-item__content">
-                <h3>{card.title}</h3>
-                <p>{card.detail}</p>
+                <div className="service-item__top">
+                  <span className="service-item__tier">{card.tier}</span>
+                  <h3>{card.headline}</h3>
+                  <p className="service-item__price">{card.price}</p>
+                  {card.priceNote && <p className="service-item__price-note">{card.priceNote}</p>}
+                </div>
+                <ul className="service-item__features">{card.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+                <p className="service-item__tags">{card.tags}</p>
               </div>
             </article>
           ))}

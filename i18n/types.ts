@@ -11,6 +11,7 @@ export type Dictionary = {
   };
   work: { eyebrow: string; title: string; intro: string; viewProject: string };
   services: { eyebrow: string; title: string; items: { title: string; copy: string; includes: string[] }[] };
+  pricing: { title: string; items: { tier: string; headline: string; price: string; priceNote?: string; features: string[]; tags: string }[] };
   principles: { eyebrow: string; title: string; intro: string; items: { title: string; copy: string }[]; signals: string[]; targets: string };
   process: { eyebrow: string; title: string; intro: string; items: { title: string; copy: string }[] };
   about: { eyebrow: string; title: string; copy: string; detail: string };

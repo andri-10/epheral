@@ -6,6 +6,10 @@ test("pricing stays after services when the desktop hero changes layout", async 
   await expect(page.locator(".living-story.is-desktop")).toBeVisible();
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.waitForFunction(() => document.querySelector<HTMLElement>(".pricing-section")!.offsetHeight > innerHeight);
+  await expect(page.locator(".pricing-section h2")).toHaveText("Një ekip që i çon idetë përpara.");
+  await expect(page.locator(".service-item__tier")).toHaveText(["ESSENTIAL", "IMMERSIVE", "BUSINESS+", "BESPOKE"]);
+  await expect(page.locator(".service-item__price")).toHaveText(["Nga €290", "Nga €690", "Nga €1290", "Flasim për projektin →"]);
+  await expect(page.locator(".service-item__features li")).toHaveCount(34);
 
   const positions = await page.evaluate(() => {
     const hero = document.querySelector<HTMLElement>(".living-story")!;
@@ -67,7 +71,13 @@ test("pricing stays after services when the desktop hero changes layout", async 
       expect(visible[index].left - visible[index - 1].right).toBeCloseTo(24, 0);
     }
     expect(visible[visible.length - 1].right).toBeCloseTo((await page.locator(".services-wrapper").boundingBox())!.x + (await page.locator(".services-wrapper").boundingBox())!.width, 0);
-    if (visibleCount === 4) await page.screenshot({ path: "test-results/pricing-four-cards.png" });
+    if (visibleCount === 4) {
+      const headingTop = await page.locator(".pricing-section h2").evaluate((node) => node.getBoundingClientRect().top);
+      expect(headingTop).toBeGreaterThan(90);
+      const hiddenFeatures = await page.locator(".service-item__features").evaluateAll((nodes) => nodes.filter((node) => node.scrollHeight > node.clientHeight + 2).length);
+      expect(hiddenFeatures).toBe(0);
+      await page.screenshot({ path: "test-results/pricing-four-cards.png" });
+    }
   }
 });
 
@@ -80,4 +90,42 @@ test("pricing cards remain readable and swipeable on narrow screens", async ({ p
   expect(dimensions.total).toBeGreaterThan(dimensions.visible * 3);
   const widths = await page.locator(".service-item").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().width));
   expect(Math.min(...widths)).toBeGreaterThan(250);
+  const heading = page.locator(".pricing-section h2");
+  expect(await heading.evaluate((node) => node.scrollWidth - node.clientWidth)).toBeLessThanOrEqual(1);
+  await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "right");
+  await expect(page.locator(".service-item__tags").first()).toHaveCSS("text-align", "center");
+  await expect(page.locator(".service-item__features li").first()).toHaveCSS("border-bottom-width", "0px");
+  await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    const services = document.querySelector<HTMLElement>(".services-page--embedded")!;
+    window.scrollTo(0, services.getBoundingClientRect().bottom + window.scrollY + 100);
+  });
+  await page.screenshot({ path: "test-results/pricing-mobile.png" });
+});
+
+test("English heading stays on one line at the narrowest viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/en");
+  const heading = page.locator(".pricing-section h2");
+  const metrics = await heading.evaluate((node) => ({ overflow: node.scrollWidth - node.clientWidth, height: node.getBoundingClientRect().height, lineHeight: Number.parseFloat(getComputedStyle(node).lineHeight) }));
+  expect(metrics.overflow).toBeLessThanOrEqual(1);
+  expect(metrics.height).toBeLessThanOrEqual(metrics.lineHeight + 1);
+});
+
+test("English pricing uses the supplied tiers without a fixed Bespoke price", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/en");
+  await expect(page.locator(".service-item__price")).toHaveText(["From €290", "From €690", "From €1290", "Let's talk →"]);
+  await expect(page.locator(".service-item:last-child .service-item__price-note")).toHaveText("Scoped individually for your project.");
+  await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    const services = document.querySelector<HTMLElement>(".services-page--embedded")!;
+    window.scrollTo(0, services.getBoundingClientRect().bottom + window.scrollY + innerHeight * 3);
+  });
+  await page.waitForTimeout(1000);
+  const headingTop = await page.locator(".pricing-section h2").evaluate((node) => node.getBoundingClientRect().top);
+  expect(headingTop).toBeGreaterThan(90);
+  await page.screenshot({ path: "test-results/pricing-four-cards-en.png" });
 });

@@ -24,6 +24,40 @@ export const en: Dictionary = {
       { title: "Search and discovery", copy: "We make the right offering easier to find, with clear paths for people and a structure search engines can understand.", includes: ["Search foundations", "Local and technical visibility"] },
     ],
   },
+  pricing: {
+    title: "A team that moves ideas forward.",
+    items: [
+      {
+        tier: "ESSENTIAL",
+        headline: "A sharp digital home for your business.",
+        price: "From €290",
+        features: ["Custom-designed website", "Up to 5 pages", "Responsive development", "Subtle motion & interactions", "Contact & booking forms", "SEO fundamentals", "Analytics setup"],
+        tags: "DESIGN / DEVELOPMENT / RESPONSIVE",
+      },
+      {
+        tier: "IMMERSIVE",
+        headline: "Make scrolling part of the story.",
+        price: "From €690",
+        features: ["Everything in Essential", "Scroll-triggered experiences", "Advanced animations", "Page transitions", "Parallax & pinned sections", "Custom micro-interactions", "Interactive galleries", "CMS integration"],
+        tags: "SCROLL / MOTION / INTERACTION",
+      },
+      {
+        tier: "BUSINESS+",
+        headline: "More than a website. A digital system.",
+        price: "From €1290",
+        features: ["Everything in Immersive", "Advanced CMS", "Search & Discovery setup", "Google Analytics & conversions", "Review & reputation system", "NFC & QR integrations", "Digital menus where applicable", "Booking / reservation systems", "Multilingual support", "Third-party integrations"],
+        tags: "WEB / DISCOVERY / REVIEWS",
+      },
+      {
+        tier: "BESPOKE",
+        headline: "If you can imagine it, we can build it.",
+        price: "Let's talk →",
+        priceNote: "Scoped individually for your project.",
+        features: ["Custom web applications", "Complex interactive experiences", "WebGL / 3D", "Advanced animation systems", "Custom dashboards", "API integrations", "Customer portals", "Custom CMS architecture", "Business automation"],
+        tags: "EXPERIMENTAL / APPLICATIONS / CUSTOM",
+      },
+    ],
+  },
   principles: {
     eyebrow: "Principles", title: "Looking good is not enough.", intro: "The website must be clear, useful and fast without losing its character.",
     items: [
