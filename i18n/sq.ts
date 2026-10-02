@@ -2,15 +2,15 @@ import type { Dictionary } from "./types";
 
 export const sq: Dictionary = {
   localeName: "Shqip",
-  nav: { work: "Projektet", services: "Shërbimet", process: "Procesi", about: "Rreth studios", contact: "Kontakt", menu: "Hap menunë", close: "Mbyll menunë" },
+  nav: { work: "Projektet", services: "Shërbimet", process: "Procesi", about: "Rreth studios", contact: "Kontakt", menu: "Hap menunë", close: "Mbyll menunë", pricing: "Çmimet", language: "Gjuha" },
   common: { primaryCta: "Flasim për projektin", secondaryCta: "Shiko projektet", learnMore: "Shiko projektin", nextProject: "Projekti tjetër", backHome: "Kthehu në faqen kryesore", replaceAsset: "Pamje orientuese — zëvendësohet me projektin real" },
   hero: {
     eyebrow: "Studio e pavarur dizajni dhe zhvillimi",
     title: "Biznesi juaj ka karakter.\nFaqja duhet ta përcjellë.",
-    support: "Strategji, dizajn dhe zhvillim për biznese me një ofertë të mirë dhe ambicie për ta paraqitur siç duhet.",
+    support: "Faqe interneti me identitet për biznese me diçka reale për të ofruar.",
     stages: [
       { label: "Potenciali", line: "" }, { label: "Drejtimi", line: "Nga ideja, te drejtimi." },
-      { label: "Detaji", line: "Çdo detaj ka peshë." }, { label: "Rezultati", line: "Bëjeni tuajin." },
+      { label: "Detaji", line: "Çdo detaj ka peshë." }, { label: "Rezultati", line: "Mos e bëni thjesht të bukur, bëjeni tuajin." },
     ],
     scroll: "Lëviz për të parë procesin",
   },
@@ -18,10 +18,10 @@ export const sq: Dictionary = {
   services: {
     eyebrow: "Shërbimet", title: "Gjithçka për biznesin tuaj në një vend.",
     items: [
-      { title: "Strategji dhe strukturë", copy: "Qartësojmë ofertën, audiencën dhe rrugën që duhet të ndjekë vizitori. Pastaj i japim përmbajtjes rendin e duhur.", includes: ["Hierarki përmbajtjeje", "UX dhe arkitekturë faqesh"] },
-      { title: "Dizajn dhe ndërveprim", copy: "Një gjuhë vizuale me karakter, e kthyer në ndërfaqe që ndihet e qartë dhe e natyrshme në çdo ekran.", includes: ["Drejtim vizual", "Lëvizje dhe integrim 3D"] },
-      { title: "Zhvillim dhe performancë", copy: "Dizajni kthehet në kod të shpejtë, të aksesueshëm dhe të lehtë për t’u mirëmbajtur.", includes: ["Zhvillim frontend", "Optimizim dhe mbështetje në publikim"] },
-      { title: "Kërkimi dhe zbulimi", copy: "E bëjmë ofertën më të lehtë për t'u gjetur, me rrugë të qarta dhe një strukturë që kuptohet nga motorët e kërkimit.", includes: ["Bazat e kërkimit", "Dukshmëri lokale dhe teknike"] },
+      { title: "Përvoja në Web", copy: "Faqe interneti të dallueshme dhe të shpejta, me strukturë të menduar, lëvizje dhe ndërveprim, që pasqyrojnë karakterin e biznesit tuaj.", includes: ["Dizajn dhe zhvillim me porosi", "Lëvizje dhe integrim 3D"] },
+      { title: "Menu Digjitale", copy: "Menu që klientët i hapin me një prekje ose skanim QR, të lehta për t’u përditësuar dhe të dizajnuara si pjesë e markës suaj.", includes: ["Qasje me QR dhe NFC", "Përditësim i lehtë"] },
+      { title: "Vlerësime dhe Reputacion", copy: "E bëjmë të thjeshtë që klientët e kënaqur të lënë një vlerësim dhe e mbajmë reputacionin tuaj të dukshëm aty ku njerëzit kërkojnë.", includes: ["Rrjedha për mbledhjen e vlerësimeve", "Dukshmëri e reputacionit"] },
+      { title: "Kërkimi dhe Zbulimi", copy: "E bëjmë ofertën e duhur më të lehtë për t’u gjetur, me rrugë të qarta për njerëzit dhe një strukturë që kuptohet nga motorët e kërkimit.", includes: ["Bazat e kërkimit", "Dukshmëri lokale dhe teknike"] },
     ],
   },
   pricing: {

@@ -40,11 +40,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <head>
-        <link rel="preload" href="/animations/canvas/living-canvas-0001.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/animations/canvas/living-canvas-0001.webp" as="image" type="image/webp" media="(min-width: 900px)" />
+        <link rel="preload" href="/animations/canvas-mobile/living-canvas-0001.webp" as="image" type="image/webp" media="(max-width: 899px)" />
       </head>
       <body suppressHydrationWarning>
         <a className="skip-link" href="#main-content">{locale === "sq" ? "Kalo te përmbajtja" : "Skip to content"}</a>
-        <GlobalNavbar locale={locale} />
+        <GlobalNavbar locale={locale} dictionary={getDictionary(locale)} />
         {children}
       </body>
     </html>

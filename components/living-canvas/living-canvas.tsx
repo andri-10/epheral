@@ -37,16 +37,26 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const copyRefs = useRef<(HTMLElement | null)[]>([]);
-  const [desktop, setDesktop] = useState(false);
+  const [animated, setAnimated] = useState(false);
+  const [compact, setCompact] = useState(false);
   useEffect(() => {
-    const query = window.matchMedia(`(min-width: ${animationConfig.desktopMinWidth}px) and (prefers-reduced-motion: no-preference)`);
-    const update = () => setDesktop(query.matches && typeof window.requestAnimationFrame === "function" && Boolean(document.createElement("canvas").getContext("2d")));
-    update(); query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    const motion = window.matchMedia("(prefers-reduced-motion: no-preference)");
+    const narrow = window.matchMedia(`(max-width: ${animationConfig.desktopMinWidth - 1}px)`);
+    const update = () => {
+      setAnimated(motion.matches && typeof window.requestAnimationFrame === "function" && Boolean(document.createElement("canvas").getContext("2d")));
+      setCompact(narrow.matches);
+    };
+    update();
+    motion.addEventListener("change", update);
+    narrow.addEventListener("change", update);
+    return () => {
+      motion.removeEventListener("change", update);
+      narrow.removeEventListener("change", update);
+    };
   }, []);
 
   useEffect(() => {
-    if (desktop) return;
+    if (animated) return;
     const finalStage = sectionRef.current?.querySelector<HTMLElement>(".mobile-stages article.is-final");
     if (!finalStage) return;
     const observer = new IntersectionObserver(([entry]) => {
@@ -57,10 +67,10 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       observer.disconnect();
       document.body.classList.remove("hero-sequence-complete");
     };
-  }, [desktop]);
+  }, [animated]);
 
   useEffect(() => {
-    if (!desktop) return;
+    if (!animated) return;
     const section = sectionRef.current;
     const canvas = canvasRef.current;
     if (!section || !canvas) return;
@@ -85,12 +95,19 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       render();
     };
 
+    // Phones use frames pre-cropped to the device and place it below the copy;
+    // wider screens fit the whole frame, which keeps the device to the right of the copy.
+    const drawArea = () => compact
+      ? { x: canvas.width * 0.05, y: canvas.height * 0.5, width: canvas.width * 0.9, height: canvas.height * 0.46 }
+      : { x: 0, y: 0, width: canvas.width, height: canvas.height };
+
     const draw = (image: HTMLImageElement, frame: number) => {
-      const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+      const area = drawArea();
+      const scale = Math.min(area.width / image.naturalWidth, area.height / image.naturalHeight);
       const width = image.naturalWidth * scale;
       const height = image.naturalHeight * scale;
-      const x = (canvas.width - width) / 2;
-      const y = (canvas.height - height) / 2;
+      const x = area.x + (area.width - width) / 2;
+      const y = area.y + (area.height - height) / 2;
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(image, x, y, width, height);
       if (frame === 1 && !introPlayed && document.body.classList.contains("launch-complete")) {
@@ -135,7 +152,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       images.set(frame, image);
       image.decoding = "async";
       image.onload = requestRender;
-      image.src = getFrameSrc(frame);
+      image.src = getFrameSrc(frame, compact);
     };
 
     for (let frame = 1; frame <= animationConfig.initialBatchSize; frame += 1) load(frame);
@@ -211,7 +228,7 @@ export function LivingCanvas({ locale, dictionary }: Props) {
       images.forEach((image) => { image.onload = null; image.src = ""; });
       images.clear();
     };
-  }, [desktop]);
+  }, [animated, compact]);
 
   const stageContent = (index: number) => (
     <>
@@ -224,8 +241,8 @@ export function LivingCanvas({ locale, dictionary }: Props) {
   );
 
   return (
-    <section className={`living-story ${desktop ? "is-desktop" : "is-flow"}`} ref={sectionRef} aria-label={dictionary.hero.eyebrow}>
-      {desktop ? (
+    <section className={`living-story ${animated ? "is-sequence" : "is-flow"} ${compact ? "is-compact" : ""}`} ref={sectionRef} aria-label={dictionary.hero.eyebrow}>
+      {animated ? (
         <div className="story-sticky">
           <div className="hero-orange-scene" aria-hidden="true"><div className="orange-grain" /></div>
           <canvas ref={canvasRef} className="story-canvas" aria-hidden="true" />

@@ -76,16 +76,26 @@ for (const viewport of [
   });
 }
 
-test("mobile loads a poster instead of the full sequence", async ({ page }) => {
+test("mobile plays the cropped frame sequence below the copy", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  const frames = new Set<string>();
-  page.on("request", (request) => { if (request.url().includes("/animations/canvas/")) frames.add(request.url()); });
+  const desktopFrames = new Set<string>();
+  page.on("request", (request) => { if (request.url().includes("/animations/canvas/")) desktopFrames.add(request.url()); });
   await page.goto("/sq");
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(350);
-  expect(await page.locator("canvas.story-canvas").count()).toBe(0);
-  expect(await page.locator(".story-poster img").count()).toBe(1);
-  expect(frames.size).toBeLessThanOrEqual(2);
+  const canvas = page.locator("canvas.story-canvas");
+  await expect(canvas).toBeVisible();
+  await expect(canvas).toHaveAttribute("data-source-size", "720,611");
+  const bounds = await canvas.evaluate((node) => {
+    const canvasNode = node as HTMLCanvasElement;
+    const [x, y, width, height] = (canvasNode.dataset.drawBounds ?? "").split(",").map(Number);
+    return { x, y, width, height, canvasWidth: canvasNode.width, canvasHeight: canvasNode.height };
+  });
+  expect(bounds.width / bounds.canvasWidth).toBeGreaterThan(0.85);
+  expect(bounds.y).toBeGreaterThan(bounds.canvasHeight * 0.4);
+  expect(bounds.y + bounds.height).toBeLessThanOrEqual(bounds.canvasHeight + 0.5);
+  await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
+  await page.evaluate(() => { document.documentElement.style.scrollBehavior = "auto"; window.scrollTo(0, innerHeight * 1.6); });
+  await expect(page.locator(".story-copy.is-active h2")).toHaveText("Çdo detaj ka peshë.");
+  expect(desktopFrames.size).toBe(0);
 });
 
 test("reduced motion uses normal document flow", async ({ page }) => {

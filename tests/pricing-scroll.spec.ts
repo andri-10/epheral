@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("pricing stays after services when the desktop hero changes layout", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/sq");
-  await expect(page.locator(".living-story.is-desktop")).toBeVisible();
+  await expect(page.locator(".living-story.is-sequence")).toBeVisible();
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.waitForFunction(() => document.querySelector<HTMLElement>(".pricing-section")!.offsetHeight > innerHeight);
   await expect(page.locator(".pricing-section__intro h2")).toHaveText("Një ekip që i çon idetë përpara.");
@@ -265,7 +265,7 @@ test("pricing cards remain readable and swipeable on narrow screens", async ({ p
   expect(Math.min(...widths)).toBeGreaterThan(250);
   const heading = page.locator(".pricing-section__intro h2");
   expect(await heading.evaluate((node) => node.scrollWidth - node.clientWidth)).toBeLessThanOrEqual(1);
-  await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "right");
+  await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "center");
   await expect(page.locator(".service-item__features li").first()).toHaveCSS("border-bottom-width", "0px");
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.evaluate(() => {

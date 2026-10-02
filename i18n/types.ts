@@ -1,6 +1,6 @@
 export type Dictionary = {
   localeName: string;
-  nav: { work: string; services: string; process: string; about: string; contact: string; menu: string; close: string };
+  nav: { work: string; services: string; process: string; about: string; contact: string; menu: string; close: string; pricing: string; language: string };
   common: { primaryCta: string; secondaryCta: string; learnMore: string; nextProject: string; backHome: string; replaceAsset: string };
   hero: {
     eyebrow: string;

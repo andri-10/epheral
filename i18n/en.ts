@@ -2,7 +2,7 @@ import type { Dictionary } from "./types";
 
 export const en: Dictionary = {
   localeName: "English",
-  nav: { work: "Work", services: "Services", process: "Process", about: "About", contact: "Contact", menu: "Open menu", close: "Close menu" },
+  nav: { work: "Work", services: "Services", process: "Process", about: "About", contact: "Contact", menu: "Open menu", close: "Close menu", pricing: "Pricing", language: "Language" },
   common: { primaryCta: "Start a conversation", secondaryCta: "View selected work", learnMore: "View project", nextProject: "Next project", backHome: "Back to home", replaceAsset: "Project visual — replace with final asset" },
   hero: {
     eyebrow: "Independent design and development studio",
@@ -18,10 +18,10 @@ export const en: Dictionary = {
   services: {
     eyebrow: "Services", title: "Everything your business needs in one place.",
     items: [
-      { title: "Strategy and structure", copy: "We clarify what the website needs to say, who it serves and how it should guide people towards the right action.", includes: ["Content hierarchy", "UX and page architecture"] },
-      { title: "Visual design and interaction", copy: "We develop a distinctive visual direction and a responsive interface that feels natural to use.", includes: ["Visual direction", "Motion and 3D integration"] },
-      { title: "Development and performance", copy: "We turn the system into resilient, fast and accessible code, ready to launch and straightforward to maintain.", includes: ["Frontend development", "Optimization and launch support"] },
-      { title: "Search and discovery", copy: "We make the right offering easier to find, with clear paths for people and a structure search engines can understand.", includes: ["Search foundations", "Local and technical visibility"] },
+      { title: "Web Experience", copy: "Distinctive, fast websites with a considered structure, motion and interaction, built to reflect the character of your business.", includes: ["Custom design and development", "Motion and 3D integration"] },
+      { title: "Digital Menus", copy: "Menus your guests open with a tap or a QR scan, easy to update and designed to feel like part of your brand.", includes: ["QR and NFC access", "Effortless updates"] },
+      { title: "Reviews & Reputation", copy: "We make it simple for happy customers to leave a review, and keep your reputation visible where people are looking.", includes: ["Review collection flows", "Reputation visibility"] },
+      { title: "Search & Discovery", copy: "We make the right offering easier to find, with clear paths for people and a structure search engines can understand.", includes: ["Search foundations", "Local and technical visibility"] },
     ],
   },
   pricing: {
