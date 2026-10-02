@@ -26,14 +26,15 @@ export const sq: Dictionary = {
   },
   pricing: {
     title: "Një ekip që i çon idetë përpara.",
+    worksHeading: "Projektet tona",
     items: [
       {
-        headline: "Prani me karakter.",
+        headline: "Shtëpi digjitale.",
         price: "Nga €290",
         features: ["Dizajn unik · deri në 5 faqe", "Zhvillim për çdo ekran", "Lëvizje, kontakt dhe rezervim", "Bazat e SEO-s", "Konfigurim i analitikës"],
       },
       {
-        headline: "Shfletimi që bëhet përvojë.",
+        headline: "Shfletimi bëhet përvojë.",
         price: "Nga €690",
         features: ["Baza e paketës Essential", "Rrëfim përmes shfletimit", "Animacione dhe kalime", "Paralaks dhe ndërveprime", "Galeri interaktive · CMS"],
       },

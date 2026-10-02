@@ -26,6 +26,7 @@ export const en: Dictionary = {
   },
   pricing: {
     title: "A team that moves ideas forward.",
+    worksHeading: "Our works",
     items: [
       {
         headline: "A sharp digital home.",
