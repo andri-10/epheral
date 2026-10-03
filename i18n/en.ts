@@ -2,8 +2,8 @@ import type { Dictionary } from "./types";
 
 export const en: Dictionary = {
   localeName: "English",
-  nav: { work: "Work", services: "Services", process: "Process", about: "About", contact: "Contact", menu: "Open menu", close: "Close menu", pricing: "Pricing", language: "Language" },
-  common: { primaryCta: "Start a conversation", secondaryCta: "View selected work", learnMore: "View project", nextProject: "Next project", backHome: "Back to home", replaceAsset: "Project visual — replace with final asset" },
+  nav: { work: "Work", services: "Services", process: "Process", about: "About", contact: "Contact", menu: "Open menu", close: "Close menu", pricing: "Pricing", language: "Language", mainMenu: "Main menu" },
+  common: { primaryCta: "Schedule a call", secondaryCta: "View selected work", learnMore: "View project", nextProject: "Next project", backHome: "Back to home", replaceAsset: "Project visual — replace with final asset" },
   hero: {
     eyebrow: "Independent design and development studio",
     title: "Your business has character. The website should reflect it.",
@@ -18,15 +18,15 @@ export const en: Dictionary = {
   services: {
     eyebrow: "Services", title: "Everything your business needs in one place.",
     items: [
-      { title: "Web Experience", copy: "Distinctive, fast websites with a considered structure, motion and interaction, built to reflect the character of your business.", includes: ["Custom design and development", "Motion and 3D integration"] },
-      { title: "Digital Menus", copy: "Menus your guests open with a tap or a QR scan, easy to update and designed to feel like part of your brand.", includes: ["QR and NFC access", "Effortless updates"] },
-      { title: "Reviews & Reputation", copy: "We make it simple for happy customers to leave a review, and keep your reputation visible where people are looking.", includes: ["Review collection flows", "Reputation visibility"] },
-      { title: "Search & Discovery", copy: "We make the right offering easier to find, with clear paths for people and a structure search engines can understand.", includes: ["Search foundations", "Local and technical visibility"] },
+      { title: "Web Experience", copy: "A website that reflects your business and makes it easy to go from browsing to getting in touch or booking. Designed for every screen, with distinctive design and thoughtful interactions.", includes: ["Custom design and development", "Layouts for phones, tablets and computers", "Contact forms, bookings and integrations"] },
+      { title: "Digital Menu", copy: "Your menu, always within reach. Present your products clearly, keep your offers up to date and create an experience that suits your space.", includes: ["QR and NFC access", "Product, price and offer updates", "Menus in multiple languages"] },
+      { title: "Reviews & Reputation", copy: "We make it easier for happy customers to share their experience. A simple path to leaving a review and a clear way to show the trust your business has earned.", includes: ["Direct access to reviews through QR and NFC", "Review integration on your website", "Customer testimonials and experiences"] },
+      { title: "Search & Discovery", copy: "We help people find and understand your business online. We organise your content and technical foundations to connect what customers search for with what you offer.", includes: ["Content and structure designed for search", "Technical search engine optimisation", "Local visibility and a Google Business Profile"] },
     ],
   },
   pricing: {
     title: "A team that moves ideas forward.",
-    worksHeading: "Our works",
+    worksHeading: "Our work",
     items: [
       {
         headline: "A sharp digital home.",
@@ -49,6 +49,11 @@ export const en: Dictionary = {
         features: ["Custom apps & portals", "Interaction · WebGL · 3D", "Advanced motion systems", "Dashboards · APIs · automation", "Custom CMS architecture"],
       },
     ],
+  },
+  closing: {
+    formTitle: "An idea to share?", phone: "Phone number", phonePrefix: "Country code", nameError: "Enter your full name.", messageError: "Tell us a little more (at least 10 characters).", message: "Your message", submit: "Send",
+    footerTitle: ["Let’s make", "it real."], phoneError: "Enter a valid phone number.",
+    unavailable: "Message delivery is currently unavailable. Please try again later.", rateLimited: "Too many attempts. Please try again in 15 minutes.",
   },
   principles: {
     eyebrow: "Principles", title: "Looking good is not enough.", intro: "The website must be clear, useful and fast without losing its character.",

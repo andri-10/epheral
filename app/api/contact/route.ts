@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { compactContactSchema } from "@/lib/compact-contact";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1).max(160),
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
 
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ status: "invalid" }, { status: 400 }); }
-  const parsed = contactSchema.safeParse(body);
+  const parsed = z.union([contactSchema, compactContactSchema]).safeParse(body);
   if (!parsed.success) return NextResponse.json({ status: "invalid", fields: parsed.error.flatten().fieldErrors }, { status: 400 });
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -46,9 +47,10 @@ export async function POST(request: NextRequest) {
   }
 
   const data = parsed.data;
+  const business = "business" in data ? data.business : data.name;
   const lines = [
-    ["Name", data.name], ["Email", data.email], ["Business", data.business],
-    ["Budget", data.budget || "Not provided"], ["Timeline", data.timeline || "Not provided"],
+    ["Name", data.name], ["Email", data.email || "Not provided"],
+    ...("phone" in data ? [["Phone", data.phone]] : [["Business", data.business], ["Budget", data.budget || "Not provided"], ["Timeline", data.timeline || "Not provided"]]),
     ["Locale", data.locale], ["Message", data.message],
   ];
   const html = lines.map(([label, value]) => `<p><strong>${label}</strong><br>${escapeHtml(value).replace(/\n/g, "<br>")}</p>`).join("");
@@ -57,7 +59,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from, to: [to], reply_to: data.email, subject: `Epheral enquiry — ${data.business}`, html }),
+      body: JSON.stringify({ from, to: [to], ...(data.email ? { reply_to: data.email } : {}), subject: `Epheral enquiry — ${business}`, html }),
     });
     if (!response.ok) return NextResponse.json({ status: "delivery_failed" }, { status: 502 });
     return NextResponse.json({ status: "sent" });

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitch } from "@/components/language-switch";
+import { MenuLinks } from "@/components/menu-links";
 import type { Locale } from "@/content/site-config";
 import webExperience from "@/public/services/web_experience.png";
 import digitalMenu from "@/public/services/digital_menu.png";
@@ -68,7 +69,7 @@ export function ServicesSection({ dictionary, locale, embedded = false }: { dict
   }, []);
   return <section className={`services-page grid-12-vars ${embedded ? "services-page--embedded" : ""}`} id="services">
     {!embedded && <><div className="services-page__chrome"><BrandLogo priority /><button className={`hero-menu services-page__menu-button ${menuOpen ? "is-open" : ""}`} type="button" aria-label={menuOpen ? dictionary.nav.close : dictionary.nav.menu} aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><span /><span /><span /></button></div>
-    <div className={`hero-menu-panel ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}><nav>{[dictionary.nav.services, dictionary.nav.work, dictionary.nav.contact, dictionary.nav.pricing].map((item, index) => <a className={index === 0 ? "is-current" : ""} key={index} href={index === 0 ? `/${locale}#services` : "#"} onClick={index === 0 ? (event) => { event.preventDefault(); setMenuOpen(false); } : (event) => event.preventDefault()} tabIndex={menuOpen ? 0 : -1}>{item}</a>)}</nav><LanguageSwitch locale={locale} label={dictionary.nav.language} tabIndex={menuOpen ? 0 : -1} /></div></>}
+    <div className={`hero-menu-panel ${menuOpen ? "is-open" : ""}`} inert={!menuOpen}><MenuLinks locale={locale} dictionary={dictionary} current="services" onNavigate={() => setMenuOpen(false)} /><LanguageSwitch locale={locale} label={dictionary.nav.language} /></div></>}
     <div className="services-page__heading" data-reveal><h2 className="text-balance">{dictionary.services.title.split("\n").map((line, index, lines) => <span key={line}><RevealWords text={line} offset={lines.slice(0, index).join(" ").split(" ").filter(Boolean).length} />{index < lines.length - 1 && <br />}</span>)}</h2></div>
     <div className="services-page__grid">
       <aside ref={sidebarRef} className="services-page__sidebar" data-reveal><nav>{categories.map((category, index) => <a className={index === selectedCategory ? "is-current" : ""} key={category} href={`#service-${index + 1}`} onClick={() => setSelectedCategory(index)}><span>0{index + 1}</span><span className="services-page__category-name">{category}</span></a>)}</nav></aside>

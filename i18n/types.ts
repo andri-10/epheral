@@ -1,6 +1,6 @@
 export type Dictionary = {
   localeName: string;
-  nav: { work: string; services: string; process: string; about: string; contact: string; menu: string; close: string; pricing: string; language: string };
+  nav: { work: string; services: string; process: string; about: string; contact: string; menu: string; close: string; pricing: string; language: string; mainMenu: string };
   common: { primaryCta: string; secondaryCta: string; learnMore: string; nextProject: string; backHome: string; replaceAsset: string };
   hero: {
     eyebrow: string;
@@ -12,6 +12,7 @@ export type Dictionary = {
   work: { eyebrow: string; title: string; intro: string; viewProject: string };
   services: { eyebrow: string; title: string; items: { title: string; copy: string; includes: string[] }[] };
   pricing: { title: string; worksHeading: string; items: { headline: string; price: string; features: string[] }[] };
+  closing: { formTitle: string; phone: string; phonePrefix: string; nameError: string; messageError: string; message: string; submit: string; footerTitle: string[]; phoneError: string; unavailable: string; rateLimited: string };
   principles: { eyebrow: string; title: string; intro: string; items: { title: string; copy: string }[]; signals: string[]; targets: string };
   process: { eyebrow: string; title: string; intro: string; items: { title: string; copy: string }[] };
   about: { eyebrow: string; title: string; copy: string; detail: string };

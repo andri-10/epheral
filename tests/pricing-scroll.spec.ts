@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("pricing stays after services when the desktop hero changes layout", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/sq");
   await expect(page.locator(".living-story.is-sequence")).toBeVisible();
@@ -10,6 +11,7 @@ test("pricing stays after services when the desktop hero changes layout", async 
   await expect(page.locator(".service-item__price")).toHaveText(["Nga €290", "Nga €690", "Nga €1290", "Flasim →"]);
   await expect(page.locator(".service-item__features li")).toHaveCount(20);
   await expect(page.locator(".service-item__tier, .service-item__tags, .service-item__price-note")).toHaveCount(0);
+  await expect(page.locator(".works-gallery")).toHaveCSS("visibility", "hidden");
 
   const positions = await page.evaluate(() => {
     const hero = document.querySelector<HTMLElement>(".living-story")!;
@@ -118,7 +120,7 @@ test("pricing stays after services when the desktop hero changes layout", async 
       await page.locator(".global-navbar__panel a.is-current").hover();
       await expect(page.locator(".global-navbar__panel a.is-current")).toHaveCSS("background-position", "0px 0px");
       await page.locator(".global-navbar__menu").click();
-      await expect(page.locator(".global-navbar__panel")).toHaveAttribute("aria-hidden", "true");
+      await expect(page.locator(".global-navbar__panel")).toHaveAttribute("inert", "");
       await expect(page.locator(".global-navbar__panel")).toHaveCSS("transition-duration", "1.1s, 0.38s, 0s");
       await page.waitForTimeout(1180);
       const headingTop = await page.locator(".pricing-section__intro h2").evaluate((node) => node.getBoundingClientRect().top);
@@ -195,7 +197,7 @@ test("pricing stays after services when the desktop hero changes layout", async 
   expect(1440 - expanded!.x - expanded!.width).toBeCloseTo(32, 0);
   await expect(page.locator(".service-item").first()).toHaveCSS("background-color", "rgb(11, 22, 40)");
   const worksHeading = page.locator(".pricing-section__works-heading");
-  await expect(worksHeading).toHaveText("Projektet tona");
+  await expect(worksHeading).toHaveText("Puna jonë");
   await expect(worksHeading).toHaveCSS("opacity", "0");
   await page.screenshot({ path: "test-results/pricing-container-expanded.png" });
 
@@ -219,6 +221,28 @@ test("pricing stays after services when the desktop hero changes layout", async 
   expect(finishedHeading!.x + finishedHeading!.width / 2).toBeCloseTo(finishedPanel!.x / 2, 0);
   expect(finishedHeading!.y).toBeGreaterThanOrEqual(finishedPanel!.y - 1);
   expect(finishedHeading!.y + finishedHeading!.height).toBeLessThanOrEqual(finishedPanel!.y + finishedPanel!.height + 1);
+  await expect(page.locator(".works-gallery")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".works-gallery")).toHaveCSS("pointer-events", "auto");
+  const workCard = page.locator(".works-gallery__card").first();
+  const caption = workCard.locator(".works-gallery__caption");
+  const otherCards = page.locator(".works-gallery__card").nth(1);
+  await expect(caption).toHaveText("B-Studio Pilates & Fitness");
+  await expect(caption).toHaveCSS("opacity", "0");
+  await expect(page.locator(".works-gallery__index")).toHaveCount(0);
+  const restingCard = (await workCard.boundingBox())!;
+  await workCard.hover();
+  await expect.poll(async () => (await workCard.boundingBox())!.y).toBeLessThan(restingCard.y - 6);
+  await expect(caption).toHaveCSS("opacity", "1");
+  await expect(otherCards).toHaveCSS("filter", "grayscale(1)");
+  await expect(otherCards).toHaveCSS("opacity", "0.45");
+  await expect(workCard).toHaveCSS("filter", "none");
+  await expect(otherCards.locator(".works-gallery__caption")).toHaveCSS("opacity", "0");
+  await page.screenshot({ path: "test-results/works-gallery-hover.png" });
+  await page.mouse.move(720, 100);
+  await expect.poll(async () => (await workCard.boundingBox())!.y).toBeGreaterThan(restingCard.y - 1);
+  await expect(caption).toHaveCSS("opacity", "0");
+  await expect(otherCards).toHaveCSS("filter", "none");
+  await expect(otherCards).toHaveCSS("opacity", "1");
   await page.screenshot({ path: "test-results/pricing-works-heading.png" });
 });
 
@@ -234,11 +258,21 @@ for (const locale of ["sq", "en"]) {
       await page.waitForTimeout(250);
       await page.evaluate(() => {
         const section = document.querySelector<HTMLElement>(".pricing-section")!;
-        const distance = Number.parseFloat(section.style.getPropertyValue("--pricing-scroll-distance"));
-        window.scrollTo(0, section.getBoundingClientRect().top + window.scrollY + innerHeight + distance);
+        window.scrollTo(0, section.getBoundingClientRect().top + window.scrollY + innerHeight * 7.6);
       });
-      await page.waitForTimeout(1100);
       const heading = page.locator(".pricing-section__works-heading");
+      // Scrub smoothing keeps the heading moving briefly after the jump; measure once it has settled.
+      const settledBoxes = () => page.evaluate(() => [".pricing-section__works-heading span", ".service-item"].map((selector) => {
+        const { x, y, width, height } = document.querySelector(selector)!.getBoundingClientRect();
+        return x + y * 3 + width * 7 + height * 11;
+      }));
+      await page.waitForTimeout(1100);
+      await expect.poll(async () => {
+        const before = await settledBoxes();
+        await page.waitForTimeout(250);
+        const after = await settledBoxes();
+        return before.every((value, index) => Math.abs(value - after[index]) < 0.1);
+      }, { timeout: 8000 }).toBe(true);
       await expect(heading).toHaveCSS("opacity", "1");
       const text = (await heading.locator("span").boundingBox())!;
       const panel = (await page.locator(".service-item").first().boundingBox())!;
@@ -249,6 +283,29 @@ for (const locale of ["sq", "en"]) {
       expect(text.y).toBeGreaterThanOrEqual(navbar.y + navbar.height + 23);
       expect(size.height - text.y - text.height).toBeGreaterThanOrEqual(31);
       expect(text.y - panel.y).toBeCloseTo(panel.y + panel.height - text.y - text.height, 0);
+      const workCards = page.locator(".works-gallery__card");
+      await expect(workCards).toHaveCount(3);
+      await expect.poll(() => workCards.locator("img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+      const bounds = await workCards.evaluateAll((cards) => cards.map((card) => {
+        const { x, y, width, height } = card.getBoundingClientRect();
+        return { x, y, width, height };
+      }));
+      expect(new Set(bounds.map((card) => card.y)).size).toBe(1);
+      expect(Math.max(...bounds.map((card) => card.width)) - Math.min(...bounds.map((card) => card.width))).toBeLessThan(1);
+      expect(bounds[0].x - panel.x).toBeCloseTo(panel.x + panel.width - bounds[2].x - bounds[2].width, 0);
+      const grid = await page.locator(".works-gallery").evaluate((gallery) => {
+        const style = getComputedStyle(gallery);
+        return { rows: style.gridTemplateRows.split(" ").map(Number.parseFloat), padding: Number.parseFloat(style.paddingTop), gap: Number.parseFloat(style.rowGap) };
+      });
+      expect(grid.rows).toHaveLength(2);
+      expect(grid.rows[0]).toBeCloseTo(grid.rows[1], 0);
+      expect(bounds[0].height).toBeCloseTo(grid.rows[0], 0);
+      expect(bounds[0].y - panel.y).toBeCloseTo(grid.padding, 0);
+      expect(panel.y + panel.height - bounds[0].y - bounds[0].height).toBeCloseTo(grid.padding + grid.gap + grid.rows[1], 0);
+      expect(bounds[0].x).toBeGreaterThan(panel.x);
+      expect(bounds[2].x + bounds[2].width).toBeLessThan(panel.x + panel.width);
+      expect(bounds[0].y).toBeGreaterThan(panel.y);
+      expect(bounds[0].y + bounds[0].height).toBeLessThan(panel.y + panel.height);
       await page.screenshot({ path: `test-results/works-heading-${locale}-${size.width}x${size.height}.png` });
     }
   });
@@ -265,7 +322,7 @@ test("pricing cards remain readable and swipeable on narrow screens", async ({ p
   expect(Math.min(...widths)).toBeGreaterThan(250);
   const heading = page.locator(".pricing-section__intro h2");
   expect(await heading.evaluate((node) => node.scrollWidth - node.clientWidth)).toBeLessThanOrEqual(1);
-  await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "center");
+  await expect(page.locator(".pricing-section__intro")).toHaveCSS("text-align", "left");
   await expect(page.locator(".service-item__features li").first()).toHaveCSS("border-bottom-width", "0px");
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
   await page.evaluate(() => {
@@ -274,21 +331,51 @@ test("pricing cards remain readable and swipeable on narrow screens", async ({ p
     window.scrollTo(0, services.getBoundingClientRect().bottom + window.scrollY + 100);
   });
   await page.screenshot({ path: "test-results/pricing-mobile.png" });
+  await page.locator(".works-gallery").scrollIntoViewIfNeeded();
+  await expect(page.locator(".works-gallery")).toHaveCSS("visibility", "visible");
+  const workCards = await page.locator(".works-gallery__card").evaluateAll((cards) => cards.map((card) => {
+    const { x, y, width } = card.getBoundingClientRect();
+    return { x, y, width };
+  }));
+  expect(workCards).toHaveLength(3);
+  // Phones: no dark panel, the cards sit in one swipeable row like the price cards.
+  const gallery = page.locator(".works-gallery");
+  await expect(gallery).toHaveCSS("overflow-x", "auto");
+  await expect(gallery).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  expect(new Set(workCards.map((card) => Math.round(card.y))).size).toBe(1);
+  expect(workCards[0].x).toBeGreaterThanOrEqual(0);
+  expect(workCards[0].x + workCards[0].width).toBeLessThanOrEqual(390);
+  expect(await gallery.evaluate((node) => node.scrollWidth > node.clientWidth * 2)).toBe(true);
+  await page.screenshot({ path: "test-results/works-gallery-mobile.png" });
 });
 
-test("English heading stays on one line at the narrowest viewport", async ({ page }) => {
+test("work previews stay visible with reduced motion", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/en");
+  await page.waitForFunction(() => document.body.classList.contains("launch-complete"));
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.locator(".works-gallery").scrollIntoViewIfNeeded();
+  await expect(page.locator(".works-gallery")).toBeVisible();
+  await expect(page.locator(".works-gallery__card")).toHaveCount(3);
+  const durations = await page.locator(".works-gallery__card").first().evaluate((card) => getComputedStyle(card).transitionDuration.split(",").map(Number.parseFloat));
+  expect(durations.every((duration) => duration <= .001)).toBe(true);
+  await page.screenshot({ path: "test-results/works-gallery-reduced-motion.png" });
+});
+
+test("English heading uses the phone section size without overflowing at the narrowest viewport", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/en");
   const heading = page.locator(".pricing-section__intro h2");
   const metrics = await heading.evaluate((node) => ({ overflow: node.scrollWidth - node.clientWidth, height: node.getBoundingClientRect().height, lineHeight: Number.parseFloat(getComputedStyle(node).lineHeight) }));
   expect(metrics.overflow).toBeLessThanOrEqual(1);
-  expect(metrics.height).toBeLessThanOrEqual(metrics.lineHeight + 1);
+  expect(metrics.height).toBeLessThanOrEqual(metrics.lineHeight * 2 + 1);
+  await expect(heading).toHaveCSS("font-size", "29.52px");
 });
 
 test("English pricing uses compact card content without a fixed Bespoke price", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/en");
-  await expect(page.locator(".pricing-section__works-heading")).toHaveText("Our works");
+  await expect(page.locator(".pricing-section__works-heading")).toHaveText("Our work");
   await expect(page.locator(".service-item__price")).toHaveText(["From €290", "From €690", "From €1290", "Let's talk →"]);
   await expect(page.locator(".service-item__tier, .service-item__tags, .service-item__price-note")).toHaveCount(0);
   await page.waitForFunction(() => document.body.classList.contains("launch-complete"));

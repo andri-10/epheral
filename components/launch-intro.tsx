@@ -2,13 +2,17 @@
 
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useState } from "react";
+import { rememberPendingSection, scrollToSection, takePendingSection } from "@/lib/section-nav";
 
 export function LaunchIntro() {
   const [phase, setPhase] = useState<"revealing" | "moving" | "done">("revealing");
 
   useLayoutEffect(() => {
     window.history.scrollRestoration = "manual";
-    if (window.location.hash) window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    if (window.location.hash) {
+      rememberPendingSection(window.location.hash);
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    }
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
 
@@ -19,6 +23,8 @@ export function LaunchIntro() {
       document.body.classList.add("launch-complete");
       document.body.classList.remove("has-launch-intro");
       window.dispatchEvent(new Event("launch-complete"));
+      const pending = takePendingSection();
+      if (pending) window.requestAnimationFrame(() => scrollToSection(pending, "instant"));
       setPhase("done");
     }, 1080);
   };
